@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Lanpush</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">Lanpush</string>
+
+    <string name="hello_first_fragment">Hello!</string>
+</resources>

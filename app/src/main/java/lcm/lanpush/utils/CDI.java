@@ -66,4 +66,12 @@ public class CDI {
 		}
 		return null;
 	}
+
+	/**
+	 * Limpa todas as instâncias guardadas, resetando o CDI.
+	 */
+	public static void clear() {
+		objetosPorClasse.clear();
+		objetosPorNome.clear();
+	}
 }

@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             Log.i("Criando MainActivity");
             super.onCreate(savedInstanceState);
+            CDI.clear();
             CDI.set(this, "main");
 
             Notificador.init(this, getSystemService(NotificationManager.class));
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         Log.i("Destruindo MainActivity");
         super.onDestroy();
+//        CDI.clear();
     }
 
     @Override

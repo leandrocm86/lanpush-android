@@ -38,8 +38,8 @@ public class Log {
                    if (!fila.isEmpty()) {
                        String mensagensEnfileiradas = "";
                        for (String mensagem : fila)
-                           mensagensEnfileiradas += "[ENFILEIRADA]" + mensagem + "\n\n";
-                       addMsg(mensagensEnfileiradas + linha + "\n\n", sendUDP);
+                           mensagensEnfileiradas += "[ENFILEIRADA]" + mensagem + "\n";
+                       addMsg(mensagensEnfileiradas + linha + "\n", sendUDP);
                        fila.clear();
                    }
                    else

@@ -38,19 +38,12 @@ public class MainActivity extends AppCompatActivity {
             CDI.clear();
             CDI.set(this, "main");
 
-            Notificador.init(this, getSystemService(NotificationManager.class));
             CDI.set(getSystemService(Context.CLIPBOARD_SERVICE));
 
             Intent servico = new Intent(this, ListenningService.class);
 
             binding = ActivityMainBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
-
-            //        new Thread(new ClientListenning()).start();
-            Intent serviceIntent = new Intent();
-            //        this.startService(servico);
-            final int RSS_JOB_ID = 1000;
-            JobIntentService.enqueueWork(this, ListenningService.class, RSS_JOB_ID, serviceIntent);
 
             setSupportActionBar(binding.toolbar);
 
@@ -68,9 +61,8 @@ public class MainActivity extends AppCompatActivity {
                         Thread thread = new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                Looper.prepare();
                                 Log.i("Instanciando Listener por nova Thread.");
-                                new ClientListenning().run();
+                                LanpushApp.restartService();
                             }
                         });
                         thread.start();
@@ -84,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
         catch(Throwable t) {
             Log.e(t);
         }
+    }
+
+    public NotificationManager getNotificationManager() {
+        return getSystemService(NotificationManager.class);
     }
 
 

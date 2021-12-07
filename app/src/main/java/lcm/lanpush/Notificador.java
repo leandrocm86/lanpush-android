@@ -25,13 +25,9 @@ public class Notificador {
     private NotificationManager notificationManager;
     private static Notificador instance;
 
-    public static void init(Context context, NotificationManager notificationManager) {
-        instance = new Notificador(context, notificationManager);
-    }
-
-    private Notificador(Context context, NotificationManager notificationManager) {
+    private Notificador(Context context) {
         this.context = context;
-        this.notificationManager = notificationManager;
+        this.notificationManager = context.getSystemService(NotificationManager.class);
         createNotificationChannel();
     }
 
@@ -50,6 +46,8 @@ public class Notificador {
     }
 
     public static Notificador getInstance() {
+        if (instance == null)
+            instance = new Notificador(LanpushApp.getContext());
         return instance;
     }
 

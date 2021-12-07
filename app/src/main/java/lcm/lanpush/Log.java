@@ -29,7 +29,10 @@ public class Log {
     }
 
     private static void log(String msg, String header, boolean sendUDP) {
-        String linha = Data.agora() + ": " + header + msg;
+        String threadId = "" + Thread.currentThread().getId();
+        if (threadId.length() > 6)
+            threadId = threadId.substring(0, 3) + threadId.substring(threadId.length() - 3);
+        String linha = "[" + threadId + "] " + Data.agora() + ": " + header + msg;
         TextView logView = (TextView) CDI.get("logView");
         if (logView != null) {
             ((MainActivity) CDI.get("main")).runOnUiThread(new Runnable() {

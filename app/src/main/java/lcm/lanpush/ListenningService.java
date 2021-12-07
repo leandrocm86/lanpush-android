@@ -20,7 +20,7 @@ public class ListenningService extends JobIntentService {
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
         Log.i("Enfileirando listener via servico");
-        Looper.prepare();super.onDestroy();
+        Looper.prepare();
         new ClientListenning().run();
     }
 

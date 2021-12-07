@@ -3,6 +3,7 @@
     package="lcm.lanpush">
 
     <application
+        android:name="lcm.lanpush.LanpushApp"
         android:allowBackup="true"
         android:icon="@drawable/lanpush"
         android:label="@string/app_name"

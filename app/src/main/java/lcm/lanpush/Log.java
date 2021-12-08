@@ -28,7 +28,7 @@ public class Log {
         log(msg, header, true);
     }
 
-    private static void log(String msg, String header, boolean sendUDP) {
+    public static void log(String msg, String header, boolean sendUDP) {
         String threadId = "" + Thread.currentThread().getId();
         if (threadId.length() > 6)
             threadId = threadId.substring(0, 3) + threadId.substring(threadId.length() - 3);
@@ -58,16 +58,7 @@ public class Log {
         TextView logView = (TextView) CDI.get("logView");
         logView.setText(logView.getText() + msg);
         if (sendUDP) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Sender.send(msg);
-                    } catch (Throwable t) {
-                        log(resumeErro(t), "[SENDER-ERROR] ", false);
-                    }
-                }
-            }).start();
+            Sender.send(msg);
         }
     }
 

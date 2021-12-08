@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Looper;
+import android.view.KeyEvent;
 import android.view.View;
 
 import androidx.core.app.JobIntentService;
@@ -24,6 +25,12 @@ import lcm.lanpush.utils.CDI;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,22 +61,27 @@ public class MainActivity extends AppCompatActivity {
             binding.fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    try {
-                        Snackbar.make(view, "Reconectando...", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                        Log.i("Reconectando...");
-                        Thread thread = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.i("Instanciando Listener por nova Thread.");
-                                LanpushApp.restartService();
-                            }
-                        });
-                        thread.start();
-//                        Notificador.getInstance().showNotification("Notificação de click!");
-                    } catch (Throwable t) {
-                        Log.e(t);
+                    binding.input.setVisibility(View.VISIBLE);
+                    if (binding.input.requestFocus()){
+                        getInputManager().showSoftInput(binding.input, InputMethodManager.SHOW_IMPLICIT);
                     }
+                    binding.fab.setVisibility(View.GONE);
+                }
+            });
+
+            binding.input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        Notificador.getInstance().showToast("Enviando...");
+                        getInputManager().hideSoftInputFromWindow(binding.input.getWindowToken(), 0);
+                        binding.fab.setVisibility(View.VISIBLE);
+                        binding.input.setVisibility(View.GONE);
+                        Sender.send(binding.input.getText().toString(), 1050);
+                        binding.input.setText("");
+                        return true;
+                    }
+                    else return false;
                 }
             });
         }
@@ -78,11 +90,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public InputMethodManager getInputManager() {
+        return (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    }
+
     public NotificationManager getNotificationManager() {
         return getSystemService(NotificationManager.class);
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -99,8 +113,22 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_reconnection) {
+            try {
+                Log.i("Reconectando...");
+                Notificador.getInstance().showToast("Reconectando...");
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.i("Instanciando Listener por nova Thread.");
+                        LanpushApp.restartService();
+                    }
+                });
+                thread.start();
+//                        Notificador.getInstance().showNotification("Notificação de click!");
+            } catch (Throwable t) {
+                Log.e(t);
+            }
         }
 
         return super.onOptionsItemSelected(item);

@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Lanpush</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_reconnection">Force Reconnection</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Lanpush</string>
 
-    <string name="hello_first_fragment">Hello!</string>
+    <string name="hello_first_fragment"></string>
 </resources>

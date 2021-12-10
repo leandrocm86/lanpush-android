@@ -40,7 +40,6 @@ public class ClientListenning extends Activity implements Runnable {
             Notificador.getInstance().showNotification("Como houveram 3 erros, o programa será fechado.");
             System.exit(1);
         }
-        else LanpushApp.restartService(); // Parou por timeout.
     }
 
     private synchronized void escutar() {

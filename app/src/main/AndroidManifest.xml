@@ -2,8 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="lcm.lanpush">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" />
+
     <application
-        android:name="lcm.lanpush.LanpushApp"
+        android:name=".LanpushApp"
         android:allowBackup="true"
         android:icon="@drawable/lanpush"
         android:label="@string/app_name"
@@ -11,12 +15,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Lanpush">
         <activity
+            android:name=".SelectionActivity"
+            android:theme="@style/Theme.AppCompat.Transparent.NoActionBar"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Lanpush.NoActionBar"
-            android:launchMode="singleInstance">
-
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.Lanpush.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,21 +38,23 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.VIEW" />
-                <!-- Include the host attribute if you want your app to respond-->
+                <!-- Include the host attribute if you want your app to respond -->
                 only to URLs with your app's domain.
-                <data android:scheme="http" android:host="www.example.com" />
+                <data
+                    android:host="www.example.com"
+                    android:scheme="http" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <!-- The BROWSABLE category is required to get links from web pages.-->
+                <!-- The BROWSABLE category is required to get links from web pages. -->
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
-        <receiver android:name=".ActionReceiver"></receiver>
+
+        <receiver android:name=".ActionReceiver" />
+
         <service
             android:name=".ListenningService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" />
+
 </manifest>

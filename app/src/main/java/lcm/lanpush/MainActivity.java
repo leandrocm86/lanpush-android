@@ -73,11 +73,11 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
-                        Notificador.getInstance().showToast("Enviando...");
                         getInputManager().hideSoftInputFromWindow(binding.input.getWindowToken(), 0);
                         binding.fab.setVisibility(View.VISIBLE);
                         binding.input.setVisibility(View.GONE);
                         Sender.send(binding.input.getText().toString(), 1050);
+                        Notificador.getInstance().showToast("Sent!");
                         binding.input.setText("");
                         return true;
                     }
@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Log.i("Instanciando Listener por nova Thread.");
-                        LanpushApp.restartService();
                     }
                 });
                 thread.start();

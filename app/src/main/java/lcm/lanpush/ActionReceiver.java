@@ -26,7 +26,7 @@ public class ActionReceiver extends BroadcastReceiver {
                 Notificador.getInstance().showToast("Copiado: " + mensagem);
             }
             else {
-                String url = mensagem;
+                String url = mensagem.replaceAll(" ", "+");
                 if (!url.startsWith("http") && !url.startsWith("www.")) {
                     url = "https://www.google.com/search?q=" + url;
                 }

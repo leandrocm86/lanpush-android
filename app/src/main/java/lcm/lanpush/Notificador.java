@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Looper;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,15 +63,6 @@ public class Notificador {
         browserAction.putExtra("action","browser");
         browserAction.putExtra("mensagem", msg);
         PendingIntent pIntentBrowser = PendingIntent.getBroadcast(context, notificationId+2, browserAction, PendingIntent.FLAG_UPDATE_CURRENT);
-
-//        String url = msg;
-//        if (!url.startsWith("http") && !url.startsWith("www.")) {
-//            url = "https://www.google.com/search?q=" + url;
-//        }
-//        Uri uri = Uri.parse(url);
-//        Intent browserAction = new Intent(Intent.ACTION_VIEW, uri);
-//        browserAction.setData(uri);
-//        PendingIntent pIntentBrowser = PendingIntent.getActivity(context,notificationId+2, browserAction, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent notificationIntent = new Intent(context, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);

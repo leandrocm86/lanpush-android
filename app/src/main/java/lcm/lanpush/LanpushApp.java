@@ -10,7 +10,10 @@ import android.content.Intent;
 
 import androidx.core.app.JobIntentService;
 import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
+
+import lcm.lanpush.utils.CDI;
 
 public class LanpushApp extends Application {
 
@@ -19,13 +22,20 @@ public class LanpushApp extends Application {
 
     @Override
     public void onCreate() {
+        Log.i("Criando LanpushApp");
         super.onCreate();
         context = new WeakReference<>(getApplicationContext());
-        restartService();
+        CDI.set(this);
+        PeriodicWorkRequest mywork =
+                new PeriodicWorkRequest.Builder(LazaroWorker.class, 15, TimeUnit.MINUTES)
+                        .setInitialDelay(1, TimeUnit.MINUTES)
+                        .build();
+        WorkManager.getInstance(getApplicationContext()).enqueue(mywork);
     }
 
     @Override
     public void onTerminate() {
+        Log.i("Terminando LanpushApp...");
         super.onTerminate();
         context.clear();
     }
@@ -53,6 +63,11 @@ public class LanpushApp extends Application {
     }
 
     public static Context getContext() {
-        return context.get();
+        if (CDI.get(LanpushApp.class) != null)
+            return CDI.get(LanpushApp.class).getApplicationContext();
+        else {
+            Log.i("Não foi encontrada instância de LanpushApp no CDI! Utilizando contexto cacheado...");
+            return context.get();
+        }
     }
 }

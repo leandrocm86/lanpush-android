@@ -13,16 +13,21 @@ public class Sender {
     private static final String HOST = "192.168.0.255";
     private static final int DEBUG_PORT = 1051;
 
+    private static int id = 0;
+
     public static void send(String message, int port) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+                    String msg = "P" + ++id + ": " + message;
+                    String host = (port == DEBUG_PORT ? "192.168.0.66" : HOST);
+
                     // Get the internet address of the specified host
-                    InetAddress address = InetAddress.getByName(HOST);
+                    InetAddress address = InetAddress.getByName(host);
 
                     // Initialize a datagram packet with data and address
-                    DatagramPacket packet = new DatagramPacket(message.getBytes(), message.getBytes().length,
+                    DatagramPacket packet = new DatagramPacket(msg.getBytes(), msg.getBytes().length,
                             address, port);
 
                     // Create a datagram socket, send the packet through it, close it.

@@ -8,6 +8,8 @@ import lcm.lanpush.utils.CDI;
 import lcm.lanpush.utils.Data;
 
 public class Log {
+    private static int id = 0;
+
     public static void i(String msg) {
         log(msg, "[INFO] ");
     }
@@ -28,7 +30,7 @@ public class Log {
         log(msg, header, true);
     }
 
-    public static void log(String msg, String header, boolean sendUDP) {
+    public static void log(String msg, String header, boolean sendDebug) {
         String threadId = "" + Thread.currentThread().getId();
         if (threadId.length() > 6)
             threadId = threadId.substring(0, 3) + threadId.substring(threadId.length() - 3);
@@ -42,22 +44,28 @@ public class Log {
                        String mensagensEnfileiradas = "";
                        for (String mensagem : fila)
                            mensagensEnfileiradas += "[ENFILEIRADA]" + mensagem + "\n";
-                       addMsg(mensagensEnfileiradas + linha + "\n", sendUDP);
+                       addMsg(mensagensEnfileiradas + linha + "\n");
                        fila.clear();
                    }
-                   else
-                       addMsg(linha + "\n", sendUDP);
+                   else addMsg(linha + "\n");
+                   sendDebug(linha, sendDebug);
                }
             });
         }
-        else
+        else {
             fila.add(linha);
+            sendDebug("[SEM VIEW] " + linha, sendDebug);
+        }
     }
 
-    private static void addMsg(String msg, boolean sendUDP) {
+    private static void addMsg(String msg) {
         TextView logView = (TextView) CDI.get("logView");
         logView.setText(logView.getText() + msg);
-        if (sendUDP) {
+    }
+
+    private static void sendDebug(String msg, boolean ligado) {
+        if (ligado) {
+            msg = "L" + ++id + msg + "\n";
             Sender.send(msg);
         }
     }

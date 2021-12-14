@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
             CDI.set(getSystemService(Context.CLIPBOARD_SERVICE));
 
-            Intent servico = new Intent(this, ListenningService.class);
-
             binding = ActivityMainBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
 
@@ -117,14 +115,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 Log.i("Reconectando...");
                 Notificador.getInstance().showToast("Reconectando...");
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.i("Instanciando Listener por nova Thread.");
-                    }
-                });
-                thread.start();
-//                        Notificador.getInstance().showNotification("Notificação de click!");
+                LanpushApp.restartService();
             } catch (Throwable t) {
                 Log.e(t);
             }

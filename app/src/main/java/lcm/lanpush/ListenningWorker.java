@@ -1,7 +1,6 @@
 package lcm.lanpush;
 
 import android.content.Context;
-import android.os.Handler;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
@@ -24,16 +23,19 @@ public class ListenningWorker extends Worker {
     @Override
     public Result doWork() {
         Log.i("Iniciando worker...");
-        if (Looper.myLooper() == null) {
-            Looper.prepare();
+        try {
+            if (Looper.myLooper() == null) {
+                Looper.prepare();
+            }
+            ClientListenning.getInstance().run();
+            OneTimeWorkRequest mywork = new OneTimeWorkRequest.Builder(ListenningWorker.class)
+                    .setInitialDelay(1, TimeUnit.SECONDS)
+                    .build();
+            WorkManager.getInstance(context).enqueue(mywork);
+            return Result.success();
+        } catch (Throwable t) {
+            Log.e("Erro na execução de ListenningWorker", t);
+            return Result.failure();
         }
-        ClientListenning.getInstance().run();
-        OneTimeWorkRequest mywork = new OneTimeWorkRequest.Builder(ListenningWorker.class)
-                .setInitialDelay(1, TimeUnit.SECONDS)
-                .build();
-        WorkManager.getInstance(context).enqueue(mywork);
-
-//        Looper.loop();
-        return Result.success();
     }
 }

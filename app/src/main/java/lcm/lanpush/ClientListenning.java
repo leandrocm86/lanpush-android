@@ -33,6 +33,10 @@ public class ClientListenning extends Activity implements Runnable {
         return instance;
     }
 
+    public boolean isRunning() {
+        return running;
+    }
+
     @Override
     public void run() {
         escutar();

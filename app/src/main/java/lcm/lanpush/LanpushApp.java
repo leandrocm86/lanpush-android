@@ -18,7 +18,7 @@ import lcm.lanpush.utils.CDI;
 public class LanpushApp extends Application {
 
     private static WeakReference<Context> context;
-    private static final int RSS_JOB_ID = 1;
+//    private static final int RSS_JOB_ID = 1;
 
     @Override
     public void onCreate() {
@@ -27,7 +27,9 @@ public class LanpushApp extends Application {
         context = new WeakReference<>(getApplicationContext());
         CDI.set(this);
         PeriodicWorkRequest mywork =
-                new PeriodicWorkRequest.Builder(LazaroWorker.class, 15, TimeUnit.MINUTES)
+                new PeriodicWorkRequest.Builder(LazaroWorker.class,
+                        PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS,
+                        PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS, TimeUnit.MILLISECONDS)
                         .setInitialDelay(1, TimeUnit.MINUTES)
                         .build();
         WorkManager.getInstance(getApplicationContext()).enqueue(mywork);
@@ -52,15 +54,15 @@ public class LanpushApp extends Application {
 //            Log.i("Servico ja estava em execucao! Ignorando ordem...");
     }
 
-    private static boolean isServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    private static boolean isServiceRunning(Class<?> serviceClass) {
+//        ActivityManager manager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
+//        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+//            if (serviceClass.getName().equals(service.service.getClassName())) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     public static Context getContext() {
         if (CDI.get(LanpushApp.class) != null)

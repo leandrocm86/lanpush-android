@@ -53,7 +53,6 @@ public class Notificador {
     }
 
     public void showNotification(String msg) {
-        msg = "N" + notificationId + ": " + msg;
         Log.i("Preparando para exibir notificação '" + msg + "'");
         Intent clipboardAction = new Intent(context, ActionReceiver.class);
         clipboardAction.putExtra("action","clipboard");

@@ -70,7 +70,7 @@ public class Notificador {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "lanpush")
                 .setSmallIcon(R.drawable.lanpush_small)
-                .setContentTitle("LANpush")
+                .setContentTitle("LANPUSH")
                 .setContentText(msg)
                 .setContentIntent(contentIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.core.app.JobIntentService;
+import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -32,7 +33,8 @@ public class LanpushApp extends Application {
                         PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS, TimeUnit.MILLISECONDS)
                         .setInitialDelay(1, TimeUnit.MINUTES)
                         .build();
-        WorkManager.getInstance(getApplicationContext()).enqueue(mywork);
+        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("Lazaro", ExistingPeriodicWorkPolicy.KEEP, mywork);
+        new Alarm().setAlarm(getApplicationContext());
     }
 
     @Override

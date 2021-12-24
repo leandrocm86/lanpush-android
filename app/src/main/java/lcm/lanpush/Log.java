@@ -53,9 +53,17 @@ public class Log {
             });
         }
         else {
-            fila.add(linha);
-            sendDebug("[SEM VIEW] " + linha, sendDebug);
+            addMsgFila(linha);
+            sendDebug(linha, sendDebug);
         }
+    }
+
+    private static void addMsgFila(String linha) {
+        if (fila.size() == 15) {
+            fila.clear();
+            fila.add("FILA COM MENSAGENS ANTIGAS FOI LIMPA");
+        }
+        fila.add(linha);
     }
 
     private static void addMsg(String msg) {

@@ -15,9 +15,9 @@ import java.nio.channels.DatagramChannel;
 
 import lcm.lanpush.utils.Data;
 
-public class ClientListenning extends Activity implements Runnable {
+public class ClientListenning {
 
-    private final int TIMEOUT = 300000; // 5min
+    private final int TIMEOUT = 600000; // 10min
     private int erros = 0;
     private DatagramSocket udpSocket;
     private long ultimaMensagem = 0;
@@ -37,7 +37,6 @@ public class ClientListenning extends Activity implements Runnable {
         return running;
     }
 
-    @Override
     public void run() {
         escutar();
         if (erros == 3) {
@@ -46,7 +45,7 @@ public class ClientListenning extends Activity implements Runnable {
         }
     }
 
-    private synchronized void escutar() {
+    private void escutar() {
         if (running == true) {
             Log.i("Tentativa de executar escutador que ja estava rodando. Abortando...");
             return;
@@ -55,10 +54,9 @@ public class ClientListenning extends Activity implements Runnable {
 //        Notificador.getInstance().showNotification("Teste");
         while (erros < 3) {
             try {
-                Log.i("Iniciando conexão com " + erros + " erros.");
                 DatagramPacket packet = reconectar();
                 udpSocket.setSoTimeout(TIMEOUT);
-                Log.i("UDP client: about to wait to receive");
+                Log.i("UDP client: about to wait to receive (" + erros + " erros)");
                 udpSocket.receive(packet);
                 String text = new String(packet.getData(), 0, packet.getLength()).trim();
                 Log.i("Received: " + text);

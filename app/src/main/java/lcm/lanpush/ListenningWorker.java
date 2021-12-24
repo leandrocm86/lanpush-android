@@ -11,6 +11,8 @@ import androidx.work.WorkerParameters;
 
 import java.util.concurrent.TimeUnit;
 
+import lcm.lanpush.utils.Data;
+
 public class ListenningWorker extends Worker {
     private final Context context;
 
@@ -27,11 +29,17 @@ public class ListenningWorker extends Worker {
             if (Looper.myLooper() == null) {
                 Looper.prepare();
             }
+
             ClientListenning.getInstance().run();
-            OneTimeWorkRequest mywork = new OneTimeWorkRequest.Builder(ListenningWorker.class)
-                    .setInitialDelay(1, TimeUnit.SECONDS)
-                    .build();
-            WorkManager.getInstance(context).enqueue(mywork);
+
+            // Continua enfileirando enquanto não for madrugada.
+            if (!ClientListenning.getInstance().isRunning() && !Data.madrugada()) {
+                OneTimeWorkRequest mywork = new OneTimeWorkRequest.Builder(ListenningWorker.class)
+                        .setInitialDelay(1, TimeUnit.SECONDS)
+                        .build();
+                WorkManager.getInstance(context).enqueue(mywork);
+            }
+
             return Result.success();
         } catch (Throwable t) {
             Log.e("Erro na execução de ListenningWorker", t);

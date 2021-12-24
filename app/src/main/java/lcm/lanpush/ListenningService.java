@@ -2,10 +2,12 @@ package lcm.lanpush;
 
 import android.app.Activity;
 import android.app.IntentService;
+import android.app.Service;
 import android.app.job.JobParameters;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Build;
+import android.os.IBinder;
 import android.os.Looper;
 import android.widget.TextView;
 
@@ -16,31 +18,25 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
-public class ListenningService extends JobIntentService {
-    @Override
-    protected void onHandleWork(@NonNull Intent intent) {
-        Log.i("Enfileirando listener via servico");
-        if (Looper.myLooper() == null) {
-            Looper.prepare();
-        }
-        ClientListenning.getInstance().run();
-    }
-
-    @Override
+public class ListenningService extends Service {
+    Alarm alarm = new Alarm();
     public void onCreate() {
-        Log.i("Criando servico...");
         super.onCreate();
     }
 
     @Override
-    public void onDestroy() {
-        Log.i("Destruindo servico...");
-        super.onDestroy();
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        alarm.setAlarm(this);
+        return START_STICKY;
     }
 
     @Override
-    public boolean onStopCurrentWork() {
-        Log.i("Parando servico...");
-        return super.onStopCurrentWork();
+    public void onStart(Intent intent, int startId) {
+        alarm.setAlarm(this);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 }

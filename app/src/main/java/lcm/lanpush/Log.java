@@ -11,11 +11,11 @@ public class Log {
     private static int id = 0;
 
     public static void i(String msg) {
-        log(msg, "[INFO] ");
+        log(msg, "[I] ");
     }
 
     public static void e(String msg) {
-        log(msg, "[ERRO] ");
+        log(msg, "[E] ");
     }
 
     public static void e(Throwable t) {
@@ -30,11 +30,15 @@ public class Log {
         log(msg, header, true);
     }
 
-    public static void log(String msg, String header, boolean sendDebug) {
+    public static String getThreadId() {
         String threadId = "" + Thread.currentThread().getId();
-        if (threadId.length() > 6)
-            threadId = threadId.substring(0, 3) + threadId.substring(threadId.length() - 3);
-        String linha = "[" + threadId + "] " + Data.agora() + ": " + header + msg;
+        if (threadId.length() > 3)
+            threadId = threadId.substring(threadId.length() - 3);
+        return threadId;
+    }
+
+    public static void log(String msg, String header, boolean sendDebug) {
+        String linha = "[" + getThreadId() + "] " + Data.agora() + ": " + header + msg;
         TextView logView = (TextView) CDI.get("logView");
         if (logView != null) {
             ((MainActivity) CDI.get("main")).runOnUiThread(new Runnable() {

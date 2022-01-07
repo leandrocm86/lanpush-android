@@ -27,14 +27,19 @@ public class LanpushApp extends Application {
         super.onCreate();
         context = new WeakReference<>(getApplicationContext());
         CDI.set(this);
-        PeriodicWorkRequest mywork =
-                new PeriodicWorkRequest.Builder(LazaroWorker.class,
+        PeriodicWorkRequest listener =
+                new PeriodicWorkRequest.Builder(ListenningWorker.class,
                         PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS,
                         PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS, TimeUnit.MILLISECONDS)
-                        .setInitialDelay(1, TimeUnit.MINUTES)
                         .build();
-        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("Lazaro", ExistingPeriodicWorkPolicy.KEEP, mywork);
-        new Alarm().setAlarm(getApplicationContext());
+        WorkManager.getInstance(getContext()).enqueueUniquePeriodicWork("Listener", ExistingPeriodicWorkPolicy.KEEP, listener);
+//        PeriodicWorkRequest lazaro =
+//                new PeriodicWorkRequest.Builder(LazaroWorker.class,
+//                        PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS,
+//                        PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS, TimeUnit.MILLISECONDS)
+//                        .build();
+//        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("Lazaro", ExistingPeriodicWorkPolicy.KEEP, lazaro);
+//        new Alarm().setAlarm(getApplicationContext());
     }
 
     @Override
@@ -46,10 +51,16 @@ public class LanpushApp extends Application {
 
     public static void restartService() {
         Log.i("Ordem recebida parar reiniciar worker.");
-        OneTimeWorkRequest mywork = new OneTimeWorkRequest.Builder(ListenningWorker.class)
-                .setInitialDelay(1, TimeUnit.SECONDS)
-                .build();
-        WorkManager.getInstance(getContext()).enqueue(mywork);
+        PeriodicWorkRequest listener =
+                new PeriodicWorkRequest.Builder(ListenningWorker.class,
+                        PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS,
+                        PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS, TimeUnit.MILLISECONDS)
+                        .build();
+        WorkManager.getInstance(getContext()).enqueueUniquePeriodicWork("Listener", ExistingPeriodicWorkPolicy.REPLACE, listener);
+//        OneTimeWorkRequest mywork = new OneTimeWorkRequest.Builder(ListenningWorker.class)
+//                .setInitialDelay(1, TimeUnit.SECONDS)
+//                .build();
+//        WorkManager.getInstance(getContext()).enqueue(mywork);
 //        Intent serviceIntent = new Intent();
 //        JobIntentService.enqueueWork(getContext(), ListenningService.class, RSS_JOB_ID, serviceIntent);
 //        if (isServiceRunning(ListenningService.class))

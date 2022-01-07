@@ -30,14 +30,16 @@ public class ListenningWorker extends Worker {
                 Looper.prepare();
             }
 
-            ClientListenning.getInstance().run();
-
-            // Continua enfileirando enquanto não for madrugada.
-            if (!ClientListenning.getInstance().isRunning() && !Data.madrugada()) {
-                OneTimeWorkRequest mywork = new OneTimeWorkRequest.Builder(ListenningWorker.class)
-                        .setInitialDelay(1, TimeUnit.SECONDS)
-                        .build();
-                WorkManager.getInstance(context).enqueue(mywork);
+            if (!Data.madrugada()) {
+                if (!ClientListenning.getInstance().isRunning()) {
+                    ClientListenning.getInstance().run();
+                    enqueueNextWork();
+                } else if (execucaoDemorada()) {
+                    Log.i("Client diz que está rodando, mas já era pra ter dado timeout. Forçando reconexão...");
+                    ClientListenning.getInstance().fecharConexao();
+                    ClientListenning.getInstance().run();
+                    enqueueNextWork();
+                }
             }
 
             return Result.success();
@@ -45,5 +47,17 @@ public class ListenningWorker extends Worker {
             Log.e("Erro na execução de ListenningWorker", t);
             return Result.failure();
         }
+    }
+
+    private boolean execucaoDemorada() {
+        long ultimaConexao = ClientListenning.getInstance().getUltimaConexao();
+        return ultimaConexao != 0 && System.currentTimeMillis() - ultimaConexao > 2*ClientListenning.TIMEOUT;
+    }
+
+    private void enqueueNextWork() {
+        OneTimeWorkRequest mywork = new OneTimeWorkRequest.Builder(ListenningWorker.class)
+                .setInitialDelay(1, TimeUnit.SECONDS)
+                .build();
+        WorkManager.getInstance(context).enqueue(mywork);
     }
 }

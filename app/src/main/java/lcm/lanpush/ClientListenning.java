@@ -17,11 +17,14 @@ import lcm.lanpush.utils.Data;
 
 public class ClientListenning {
 
-    private final int TIMEOUT = 600000; // 10min
+    public static final int TIMEOUT = 300000; // 5min
     private int erros = 0;
     private DatagramSocket udpSocket;
     private long ultimaMensagem = 0;
     private boolean running = false;
+    private long ultimaConexao = 0;
+    private String penultimaThread = "";
+    private String threadAtual = "";
 
     private static ClientListenning instance;
 
@@ -36,8 +39,10 @@ public class ClientListenning {
     public boolean isRunning() {
         return running;
     }
+    public long getUltimaConexao() { return ultimaConexao; }
 
     public void run() {
+//        if (!Data.madrugada())
         escutar();
         if (erros == 3) {
             Notificador.getInstance().showNotification("Como houveram 3 erros, o programa será fechado.");
@@ -45,42 +50,49 @@ public class ClientListenning {
         }
     }
 
-    private void escutar() {
+    private synchronized void escutar() {
         if (running == true) {
             Log.i("Tentativa de executar escutador que ja estava rodando. Abortando...");
             return;
         }
         running = true;
 //        Notificador.getInstance().showNotification("Teste");
-        while (erros < 3) {
-            try {
-                DatagramPacket packet = reconectar();
-                udpSocket.setSoTimeout(TIMEOUT);
-                Log.i("UDP client: about to wait to receive (" + erros + " erros)");
-                udpSocket.receive(packet);
-                String text = new String(packet.getData(), 0, packet.getLength()).trim();
-                Log.i("Received: " + text);
+        try {
+            DatagramPacket packet = reconectar();
+//                if (ultimaMensagem > ultimaConexao) // Se acabou de receber uma mensagem, devemos decrementar o que já esperamos.
+//                    timeout -= (ultimaMensagem - ultimaConexao);
+            udpSocket.setSoTimeout(TIMEOUT);
+            ultimaConexao = System.currentTimeMillis();
+            Log.i("UDP: about to wait (" + erros + " erros, timeout " + TIMEOUT + ", thread " + atualizaThread() + ")");
+            udpSocket.receive(packet);
+            String text = new String(packet.getData(), 0, packet.getLength()).trim();
+            Log.i("Received: " + text);
+            synchronized(this) {
                 if (System.currentTimeMillis() - ultimaMensagem > 3000) // Espera um tempo pra ouvir de novo, evitando mensagens duplicadas.
                     Notificador.getInstance().showNotification(text);
                 ultimaMensagem = System.currentTimeMillis();
             }
-            catch (SocketTimeoutException e) {
-                Log.i("TIMEOUT!");
-                break;
-            }
-            catch (Throwable t) {
-                erros++;
-                Log.e("Erro ao tentar ouvir porta", t);
-            } finally {
-                fecharConexao();
-            }
+        } catch (SocketTimeoutException e) {
+            Log.i("TIMEOUT!");
+        } catch (Throwable t) {
+            erros++;
+            Log.e("Erro ao tentar ouvir porta", t);
+            ultimaMensagem = System.currentTimeMillis();
+        } finally {
+            fecharConexao();
+            running = false;
         }
-        running = false;
     }
 
-    private DatagramPacket reconectar() throws SocketException {
-        if (udpSocket != null) {
-            Log.i("Socket já estava instanciado ao começar a ouvir. Será fechado...");
+    private String atualizaThread() {
+        penultimaThread = threadAtual;
+        threadAtual = Log.getThreadId();
+        return penultimaThread + "->" + threadAtual;
+    }
+
+    private synchronized DatagramPacket reconectar() throws SocketException {
+        if (udpSocket != null && !udpSocket.isClosed()) {
+            Log.i("Socket já estava ligado ao começar a ouvir. Será fechado...");
             fecharConexao();
         }
         udpSocket = new DatagramSocket(1050);
@@ -88,17 +100,18 @@ public class ClientListenning {
         return new DatagramPacket(message, message.length);
     }
 
-    private void fecharConexao() {
+    public synchronized void fecharConexao() {
         if (udpSocket != null) {
             try {
                 if (udpSocket.isClosed())
                     Log.i("Conexão já se encontra fechada.");
                 else {
                     Log.i("Fechando conexão...");
+                    udpSocket.setSoTimeout(1);
                     udpSocket.disconnect();
                     udpSocket.close();
                 }
-                udpSocket = null;
+                running = false;
             } catch (Throwable t) {
                 erros++;
                 Log.e("Erro ao tentar fechar conexão", t);

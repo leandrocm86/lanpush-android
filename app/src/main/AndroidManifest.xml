@@ -48,22 +48,22 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
-        <receiver android:name=".Alarm" android:exported="true">
-            <intent-filter>
-                <action android:name="lcm.lanpush.START_ALARM" >
-                </action>
-            </intent-filter>
-        </receiver>
+<!--        <receiver android:name=".Alarm" android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="lcm.lanpush.START_ALARM" >-->
+<!--                </action>-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
         <receiver android:name=".AutoStart" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
             </intent-filter>
         </receiver>
-        <service
-            android:name=".ListenningService"
-            android:enabled="true"
-            android:process=":your_service" >
-        </service>
+<!--        <service-->
+<!--            android:name=".ListenningService"-->
+<!--            android:enabled="true"-->
+<!--            android:process=":your_service" >-->
+<!--        </service>-->
 
         <receiver android:name=".ActionReceiver" />
     </application>

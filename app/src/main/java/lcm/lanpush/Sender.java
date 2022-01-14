@@ -22,6 +22,8 @@ public class Sender {
                 try {
                     String msg = "P" + ++id + ": " + message;
                     String host = (port == DEBUG_PORT ? "192.168.0.66" : HOST);
+                    if ("[auto]".equals(message))
+                        host = "127.0.0.1";
 
                     // Get the internet address of the specified host
                     InetAddress address = InetAddress.getByName(host);

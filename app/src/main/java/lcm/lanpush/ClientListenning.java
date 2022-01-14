@@ -1,23 +1,14 @@
 package lcm.lanpush;
 
-import android.app.Activity;
-import android.widget.TextView;
-
-import org.w3c.dom.Text;
-
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.nio.channels.DatagramChannel;
-
-import lcm.lanpush.utils.Data;
 
 public class ClientListenning {
 
-    public static final int TIMEOUT = 300000; // 5min
+    public static final int DEFAULT_TIMEOUT = 60000; // 1min
+    private int timeout = DEFAULT_TIMEOUT;
     private int erros = 0;
     private DatagramSocket udpSocket;
     private long ultimaMensagem = 0;
@@ -59,16 +50,15 @@ public class ClientListenning {
 //        Notificador.getInstance().showNotification("Teste");
         try {
             DatagramPacket packet = reconectar();
-//                if (ultimaMensagem > ultimaConexao) // Se acabou de receber uma mensagem, devemos decrementar o que já esperamos.
-//                    timeout -= (ultimaMensagem - ultimaConexao);
-            udpSocket.setSoTimeout(TIMEOUT);
+            udpSocket.setSoTimeout(timeout);
             ultimaConexao = System.currentTimeMillis();
-            Log.i("UDP: about to wait (" + erros + " erros, timeout " + TIMEOUT + ", thread " + atualizaThread() + ")");
+            Log.i("UDP: about to wait (" + erros + " erros, timeout " + timeout + ", thread " + atualizaThread() + ")");
             udpSocket.receive(packet);
             String text = new String(packet.getData(), 0, packet.getLength()).trim();
             Log.i("Received: " + text);
             synchronized(this) {
-                if (System.currentTimeMillis() - ultimaMensagem > 3000) // Espera um tempo pra ouvir de novo, evitando mensagens duplicadas.
+                // Espera um tempo pra ouvir de novo, evitando mensagens duplicadas.
+                if (System.currentTimeMillis() - ultimaMensagem > 3000 && !text.contains("[auto]"))
                     Notificador.getInstance().showNotification(text);
                 ultimaMensagem = System.currentTimeMillis();
             }
@@ -107,9 +97,9 @@ public class ClientListenning {
                     Log.i("Conexão já se encontra fechada.");
                 else {
                     Log.i("Fechando conexão...");
-                    udpSocket.setSoTimeout(1);
                     udpSocket.disconnect();
                     udpSocket.close();
+                    udpSocket = null;
                 }
                 running = false;
             } catch (Throwable t) {
@@ -119,5 +109,13 @@ public class ClientListenning {
         } else {
             Log.i("Conexão nula não precisa ser fechada.");
         }
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+        Log.i("Timeout set: " + timeout);
+    }
+    public int getTimeout() {
+        return timeout;
     }
 }

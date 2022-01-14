@@ -60,11 +60,7 @@ public class CDI {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T get(Class<T> tipo, CharSequence nome) {
-		HashMap<CharSequence, Object> mapa = (HashMap<CharSequence, Object>) objetosPorClasse.get(tipo);
-		if (mapa != null) {
-			return (T) mapa.get(nome);
-		}
-		return null;
+		return (T) objetosPorNome.get(nome);
 	}
 
 	/**

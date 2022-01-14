@@ -12,7 +12,8 @@
         android:layout_height="710dp"
         android:layout_marginTop="20dp"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="1dp">
+        tools:layout_editor_absoluteX="1dp"
+        tools:ignore="MissingConstraints">
 
         <TextView
             android:id="@+id/logview"

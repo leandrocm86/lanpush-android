@@ -10,5 +10,19 @@
         android:name="lcm.lanpush.FirstFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_first">
+        <action
+            android:id="@+id/settings"
+            app:destination="@id/settings"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/settings"
+        android:name="lcm.lanpush.SettingsActivity$SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/settings_activity">
+        <action
+            android:id="@+id/FirstFragment"
+            app:destination="@id/FirstFragment"
+            />
     </fragment>
 </navigation>

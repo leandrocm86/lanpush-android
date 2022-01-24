@@ -7,8 +7,10 @@ import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import androidx.core.app.JobIntentService;
+import androidx.preference.PreferenceManager;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
@@ -23,10 +25,16 @@ public class LanpushApp extends Application {
 
     @Override
     public void onCreate() {
-        Log.i("Criando LanpushApp");
+        Log.i("Creating LanpushApp");
         super.onCreate();
         context = new WeakReference<>(getApplicationContext());
         CDI.set(this);
+        CDI.set(getSystemService(Context.CLIPBOARD_SERVICE));
+        Integer timeout = getIntPreference("timeout");
+        if (timeout != null) {
+            ClientListenning.getInstance().setTimeout(timeout);
+        }
+
         PeriodicWorkRequest listener =
                 new PeriodicWorkRequest.Builder(ListenningWorker.class,
                         PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS,
@@ -44,13 +52,13 @@ public class LanpushApp extends Application {
 
     @Override
     public void onTerminate() {
-        Log.i("Terminando LanpushApp...");
+        Log.i("Terminating LanpushApp...");
         super.onTerminate();
         context.clear();
     }
 
     public static void restartService() {
-        Log.i("Ordem recebida parar reiniciar worker.");
+        Log.i("Order received to restart worker.");
         PeriodicWorkRequest listener =
                 new PeriodicWorkRequest.Builder(ListenningWorker.class,
                         PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS,
@@ -81,8 +89,44 @@ public class LanpushApp extends Application {
         if (CDI.get(LanpushApp.class) != null)
             return CDI.get(LanpushApp.class).getApplicationContext();
         else {
-            Log.i("Não foi encontrada instância de LanpushApp no CDI! Utilizando contexto cacheado...");
+            Log.i("LanpushApp instance not found! Using cached context...");
             return context.get();
         }
+    }
+
+    public static SharedPreferences getPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(getContext());
+    }
+
+    public static String getPreference(String key) {
+        String value = null;
+        try {
+            value = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(key, null);
+            if (value == null) {
+                Log.e("Preference not found: " + key);
+            }
+        }
+        catch (ClassCastException e) {
+            Log.e("Preference saved was not a String. Clearing the preferences...");
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+            editor.clear();
+            editor.commit();
+        }
+        return value;
+    }
+
+    public static Integer getIntPreference(String key) {
+        String value = getPreference(key);
+        if (value == null)
+            return null;
+        else {
+            return Integer.parseInt(value);
+        }
+    }
+
+    public static void setIntPreference(String key, int value) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+        editor.putString(key, value + "");
+        editor.commit();
     }
 }

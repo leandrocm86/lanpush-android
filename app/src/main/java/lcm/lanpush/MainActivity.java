@@ -46,11 +46,6 @@ public class MainActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             CDI.clear();
             CDI.set(this, "main");
-            CDI.set(getSystemService(Context.CLIPBOARD_SERVICE));
-
-            SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
-            int timeout = preferences.getInt("timeout", ClientListenning.DEFAULT_TIMEOUT);
-            ClientListenning.getInstance().setTimeout(timeout);
 
             binding = ActivityMainBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());

@@ -48,9 +48,8 @@ public class SettingsActivity extends PreferenceActivity {
             EditTextPreference timeoutPreferences = (EditTextPreference) findPreference("timeout");
             if (timeoutPreferences != null) {
                 CDI.get(MainActivity.class, "main").hideButton();
-                SharedPreferences preferences = LanpushApp.getPreferences();
-                String timeouText = LanpushApp.getPreference("timeout");
-                timeoutPreferences.setText(timeouText != null ? timeouText : ClientListenning.DEFAULT_TIMEOUT + "");
+                String timeoutText = LanpushApp.getPreference("timeout");
+                timeoutPreferences.setText(timeoutText != null ? timeoutText : ClientListenning.DEFAULT_TIMEOUT + "");
                 timeoutPreferences.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                     @Override
                     public boolean onPreferenceChange(Preference preference, Object newValue) {

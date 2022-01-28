@@ -5,6 +5,8 @@ import android.app.Application;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.TimeUnit;
 
+import android.content.ClipboardManager;
+import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,7 +31,6 @@ public class LanpushApp extends Application {
         super.onCreate();
         context = new WeakReference<>(getApplicationContext());
         CDI.set(this);
-        CDI.set(getSystemService(Context.CLIPBOARD_SERVICE));
         Integer timeout = getIntPreference("timeout");
         if (timeout != null) {
             ClientListenning.getInstance().setTimeout(timeout);
@@ -53,8 +54,41 @@ public class LanpushApp extends Application {
     @Override
     public void onTerminate() {
         Log.i("Terminating LanpushApp...");
-        super.onTerminate();
         context.clear();
+        super.onTerminate();
+    }
+
+    @Override
+    public void onLowMemory() {
+        Log.i("OnLowMemory");
+        super.onLowMemory();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        Log.i("OnTrimMemory: Level " + level + " - " + descriptionForMemoryLevel(level));
+        super.onTrimMemory(level);
+    }
+
+    private String descriptionForMemoryLevel(int level) {
+        switch (level) {
+            case ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE:
+                return "RUNNING MODERATE";
+            case ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW:
+                return "RUNNING LOW";
+            case ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL:
+                return "RUNNING CRITICAL";
+            case ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN:
+                return "UI HIDDEN";
+            case ComponentCallbacks2.TRIM_MEMORY_BACKGROUND:
+                return "BACKGROUND";
+            case ComponentCallbacks2.TRIM_MEMORY_MODERATE:
+                return "MODERATE";
+            case ComponentCallbacks2.TRIM_MEMORY_COMPLETE:
+                return "COMPLETE";
+
+            default: return "?";
+        }
     }
 
     public static void restartService() {
@@ -96,6 +130,10 @@ public class LanpushApp extends Application {
 
     public static SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(getContext());
+    }
+
+    public static ClipboardManager getClipboard() {
+        return (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
     }
 
     public static String getPreference(String key) {

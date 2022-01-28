@@ -20,7 +20,7 @@ public class ActionReceiver extends BroadcastReceiver {
             String action = intent.getStringExtra("action");
             String mensagem = intent.getStringExtra("mensagem");
             if (action.equals("clipboard")) {
-                ClipboardManager clipboard = CDI.get(ClipboardManager.class);
+                ClipboardManager clipboard = LanpushApp.getClipboard();
                 ClipData clip = ClipData.newPlainText(mensagem, mensagem);
                 clipboard.setPrimaryClip(clip);
                 Notificador.getInstance().showToast("Copiado: " + mensagem);

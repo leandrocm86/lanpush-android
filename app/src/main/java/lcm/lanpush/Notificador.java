@@ -57,15 +57,15 @@ public class Notificador {
         Intent clipboardAction = new Intent(context, ActionReceiver.class);
         clipboardAction.putExtra("action","clipboard");
         clipboardAction.putExtra("mensagem", msg);
-        PendingIntent pIntentClipboard = PendingIntent.getBroadcast(context, notificationId+1, clipboardAction, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pIntentClipboard = PendingIntent.getBroadcast(context, notificationId+1, clipboardAction, PendingIntent.FLAG_IMMUTABLE);
 
         Intent browserAction = new Intent(context, ActionReceiver.class);
         browserAction.putExtra("action","browser");
         browserAction.putExtra("mensagem", msg);
-        PendingIntent pIntentBrowser = PendingIntent.getBroadcast(context, notificationId+2, browserAction, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pIntentBrowser = PendingIntent.getBroadcast(context, notificationId+2, browserAction, PendingIntent.FLAG_IMMUTABLE);
 
         Intent notificationIntent = new Intent(context, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "lanpush")

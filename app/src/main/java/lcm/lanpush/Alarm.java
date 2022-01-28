@@ -25,7 +25,7 @@ public class Alarm extends BroadcastReceiver {
     public void setAlarm(Context context) {
         AlarmManager am =( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent("lcm.lanpush.START_ALARM");
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_IMMUTABLE);
         long triggerAtMillis = Data.timestampProximaManha() - System.currentTimeMillis();
         Log.i("Configurando alarme para daqui a " + Data.formataTempo(triggerAtMillis));
         am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pi);

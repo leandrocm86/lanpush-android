@@ -24,7 +24,7 @@ public class ListenningWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        Log.i("Iniciando worker...");
+        Log.i("Starting worker...");
         try {
             if (Looper.myLooper() == null) {
                 Looper.prepare();
@@ -53,7 +53,7 @@ public class ListenningWorker extends Worker {
 
             return Result.success();
         } catch (Throwable t) {
-            Log.e("Erro na execução de ListenningWorker", t);
+            Log.e("Error executing ListenningWorker", t);
             return Result.failure();
         }
     }

@@ -36,14 +36,14 @@ public class ClientListenning {
 //        if (!Data.madrugada())
         escutar();
         if (erros == 3) {
-            Notificador.getInstance().showNotification("Como houveram 3 erros, o programa será fechado.");
+            Notificador.getInstance().showNotification("Since there were 3 errors, the app is getting closed.");
             System.exit(1);
         }
     }
 
     private synchronized void escutar() {
         if (running == true) {
-            Log.i("Tentativa de executar escutador que ja estava rodando. Abortando...");
+            Log.i("Tried to execute listenner that was already running. Aborting...");
             return;
         }
         running = true;
@@ -52,7 +52,7 @@ public class ClientListenning {
             DatagramPacket packet = reconectar();
             udpSocket.setSoTimeout(timeout);
             ultimaConexao = System.currentTimeMillis();
-            Log.i("UDP: about to wait (" + erros + " erros, timeout " + timeout + ", thread " + atualizaThread() + ")");
+            Log.i("UDP: about to wait (" + erros + " errors, timeout " + timeout + ", thread " + atualizaThread() + ")");
             udpSocket.receive(packet);
             String text = new String(packet.getData(), 0, packet.getLength()).trim();
             Log.i("Received: " + text);
@@ -66,7 +66,7 @@ public class ClientListenning {
             Log.i("TIMEOUT!");
         } catch (Throwable t) {
             erros++;
-            Log.e("Erro ao tentar ouvir porta", t);
+            Log.e("Error while listenning!", t);
             ultimaMensagem = System.currentTimeMillis();
         } finally {
             fecharConexao();
@@ -82,7 +82,7 @@ public class ClientListenning {
 
     private synchronized DatagramPacket reconectar() throws SocketException {
         if (udpSocket != null && !udpSocket.isClosed()) {
-            Log.i("Socket já estava ligado ao começar a ouvir. Será fechado...");
+            Log.i("Socket was already active while trying to reconnect. Closing it...");
             fecharConexao();
         }
         udpSocket = new DatagramSocket(1050);
@@ -94,9 +94,9 @@ public class ClientListenning {
         if (udpSocket != null) {
             try {
                 if (udpSocket.isClosed())
-                    Log.i("Conexão já se encontra fechada.");
+                    Log.i("Connection was already closed.");
                 else {
-                    Log.i("Fechando conexão...");
+                    Log.i("Closing connection...");
                     udpSocket.disconnect();
                     udpSocket.close();
                     udpSocket = null;
@@ -104,10 +104,10 @@ public class ClientListenning {
                 running = false;
             } catch (Throwable t) {
                 erros++;
-                Log.e("Erro ao tentar fechar conexão", t);
+                Log.e("Error while trying to close connection", t);
             }
         } else {
-            Log.i("Conexão nula não precisa ser fechada.");
+            Log.i("Null connection. Doesn't need to be closed.");
         }
     }
 

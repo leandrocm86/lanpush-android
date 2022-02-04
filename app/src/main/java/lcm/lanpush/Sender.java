@@ -20,7 +20,6 @@ public class Sender {
             @Override
             public void run() {
                 try {
-                    String msg = "P" + ++id + ": " + message;
                     String host = (port == DEBUG_PORT ? "192.168.0.66" : HOST);
                     if ("[auto]".equals(message))
                         host = "127.0.0.1";
@@ -29,7 +28,7 @@ public class Sender {
                     InetAddress address = InetAddress.getByName(host);
 
                     // Initialize a datagram packet with data and address
-                    DatagramPacket packet = new DatagramPacket(msg.getBytes(), msg.getBytes().length,
+                    DatagramPacket packet = new DatagramPacket(message.getBytes(), message.getBytes().length,
                             address, port);
 
                     // Create a datagram socket, send the packet through it, close it.

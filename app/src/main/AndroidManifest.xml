@@ -2,10 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="lcm.lanpush">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" />
-
     <application
         android:name=".LanpushApp"
         android:allowBackup="true"
@@ -35,14 +31,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <action android:name="android.intent.action.VIEW" />
-                <!-- Include the host attribute if you want your app to respond -->
-                only to URLs with your app's domain.
-                <data
-                    android:host="www.example.com"
-                    android:scheme="http" />
+<!--                <data android:scheme="http" />-->
                 <category android:name="android.intent.category.DEFAULT" />
                 <!-- The BROWSABLE category is required to get links from web pages. -->
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -65,11 +55,14 @@
 <!--            android:process=":your_service" >-->
 <!--        </service>-->
 
-        <receiver android:name=".ActionReceiver" />
+        <receiver android:name=".ClipboardAction" android:exported="true"/>
+
     </application>
+
     <uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission>
-    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"></uses-permission>
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" />
 
 </manifest>

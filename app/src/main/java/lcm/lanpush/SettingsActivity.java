@@ -16,7 +16,6 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import lcm.lanpush.databinding.ActivityMainBinding;
-import lcm.lanpush.utils.CDI;
 
 public class SettingsActivity extends PreferenceActivity {
 
@@ -47,7 +46,8 @@ public class SettingsActivity extends PreferenceActivity {
 
             EditTextPreference timeoutPreferences = (EditTextPreference) findPreference("timeout");
             if (timeoutPreferences != null) {
-                CDI.get(MainActivity.class, "main").hideButton();
+                if (LanpushApp.getMainActivity() != null)
+                    LanpushApp.getMainActivity().hideButton();
                 String timeoutText = LanpushApp.getPreference("timeout");
                 timeoutPreferences.setText(timeoutText != null ? timeoutText : ClientListenning.DEFAULT_TIMEOUT + "");
                 timeoutPreferences.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -74,7 +74,8 @@ public class SettingsActivity extends PreferenceActivity {
 
         @Override
         public void onDestroyView() {
-            CDI.get(MainActivity.class, "main").showButton();
+            if (LanpushApp.getMainActivity() != null)
+                LanpushApp.getMainActivity().showButton();
             super.onDestroyView();
         }
     }

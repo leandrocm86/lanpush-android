@@ -10,6 +10,7 @@ import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.widget.TextView;
 
 import androidx.core.app.JobIntentService;
 import androidx.preference.PreferenceManager;
@@ -18,19 +19,17 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import lcm.lanpush.utils.CDI;
-
 public class LanpushApp extends Application {
 
     private static WeakReference<Context> context;
-//    private static final int RSS_JOB_ID = 1;
+    private static WeakReference<MainActivity> mainActivity;
+    private static WeakReference<TextView> textView;
 
     @Override
     public void onCreate() {
         Log.i("Creating LanpushApp");
         super.onCreate();
         context = new WeakReference<>(getApplicationContext());
-        CDI.set(this);
         Integer timeout = getIntPreference("timeout");
         if (timeout != null) {
             ClientListenning.getInstance().setTimeout(timeout);
@@ -49,6 +48,7 @@ public class LanpushApp extends Application {
 //                        .build();
 //        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("Lazaro", ExistingPeriodicWorkPolicy.KEEP, lazaro);
 //        new Alarm().setAlarm(getApplicationContext());
+//        Notificador.getInstance().showNotification("Test");
     }
 
     @Override
@@ -67,7 +67,21 @@ public class LanpushApp extends Application {
     @Override
     public void onTrimMemory(int level) {
         Log.i("OnTrimMemory: Level " + level + " - " + descriptionForMemoryLevel(level));
+        ActivityManager.MemoryInfo memoryInfo = getMemoryInfo();
+        Log.i("LowMemory: " + memoryInfo.lowMemory + ", used " + (Math.round(100-memoryInfo.availMem*100/memoryInfo.totalMem)) + "%");
+        if (level >= 40) {
+            Notificador.clean();
+            memoryInfo = getMemoryInfo();
+            Log.i("Objects cleared. LowMemory: " + memoryInfo.lowMemory + ", used " + (Math.round(100-memoryInfo.availMem*100/memoryInfo.totalMem)) + "%");
+        }
         super.onTrimMemory(level);
+    }
+
+    private ActivityManager.MemoryInfo getMemoryInfo() {
+        ActivityManager activityManager = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+        ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+        activityManager.getMemoryInfo(memoryInfo);
+        return memoryInfo;
     }
 
     private String descriptionForMemoryLevel(int level) {
@@ -120,12 +134,23 @@ public class LanpushApp extends Application {
 //    }
 
     public static Context getContext() {
-        if (CDI.get(LanpushApp.class) != null)
-            return CDI.get(LanpushApp.class).getApplicationContext();
-        else {
-            Log.i("LanpushApp instance not found! Using cached context...");
-            return context.get();
-        }
+        return context.get();
+    }
+
+    public static void saveMainActivity(MainActivity activity) {
+        mainActivity = new WeakReference<MainActivity>(activity);
+    }
+
+    public static MainActivity getMainActivity() {
+        return mainActivity != null ? mainActivity.get() : null;
+    }
+
+    public static void saveTextView(TextView view) {
+        textView = new WeakReference<TextView>(view);
+    }
+
+    public static TextView getTextView() {
+        return textView != null ? textView.get() : null;
     }
 
     public static SharedPreferences getPreferences() {

@@ -23,7 +23,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import lcm.lanpush.databinding.ActivityMainBinding;
-import lcm.lanpush.utils.CDI;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,10 +41,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
-            Log.i("Criando MainActivity");
+            Log.i("Creating MainActivity");
             super.onCreate(savedInstanceState);
-            CDI.clear();
-            CDI.set(this, "main");
+            LanpushApp.saveMainActivity(this);
 
             binding = ActivityMainBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
@@ -146,14 +144,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Log.i("Destruindo MainActivity");
+        Log.i("Destroying MainActivity");
         super.onDestroy();
 //        CDI.clear();
     }
 
     @Override
     protected void onStop() {
-        Log.i("Parando MainActivity");
+        Log.i("Stopping MainActivity");
         super.onStop();
     }
 

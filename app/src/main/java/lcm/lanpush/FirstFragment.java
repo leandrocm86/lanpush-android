@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import lcm.lanpush.databinding.FragmentFirstBinding;
-import lcm.lanpush.utils.CDI;
 
 public class FirstFragment extends Fragment {
 
@@ -29,8 +28,6 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        CDI.set(view.getRootView(), "rootView");
-
 //        binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -39,7 +36,7 @@ public class FirstFragment extends Fragment {
 //            }
 //        });
 
-        CDI.set(binding.logview, "logView");
+        LanpushApp.saveTextView(binding.logview);
     }
 
     @Override

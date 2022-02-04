@@ -4,7 +4,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import lcm.lanpush.utils.CDI;
 import lcm.lanpush.utils.Data;
 
 public class Log {
@@ -39,9 +38,9 @@ public class Log {
 
     public static void log(String msg, String header, boolean sendDebug) {
         String linha = "[" + getThreadId() + "] " + Data.agora() + ": " + header + msg;
-        TextView logView = (TextView) CDI.get("logView");
+        TextView logView = (TextView) LanpushApp.getTextView();
         if (logView != null) {
-            ((MainActivity) CDI.get("main")).runOnUiThread(new Runnable() {
+            LanpushApp.getMainActivity().runOnUiThread(new Runnable() {
                @Override
                public void run() {
                    if (!fila.isEmpty()) {
@@ -71,7 +70,7 @@ public class Log {
     }
 
     private static void addMsg(String msg) {
-        TextView logView = (TextView) CDI.get("logView");
+        TextView logView = LanpushApp.getTextView();
         logView.setText(logView.getText() + msg);
     }
 

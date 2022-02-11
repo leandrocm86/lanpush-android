@@ -53,34 +53,45 @@ public class Notificador {
         return instance;
     }
 
+    public void cancelNotification(int notificationId) {
+        NotificationManagerCompat manager = NotificationManagerCompat.from(context.getApplicationContext());
+        manager.cancel(notificationId);
+        manager.cancel(notificationId+1); // ClipboardAction
+        manager.cancel(notificationId+2); // BrowserAction
+        manager.cancel(notificationId+3); // Notification
+    }
+
     public static void clean() {
         instance = null;
     }
 
     public void showNotification(String msg) {
         Log.i("Preparing to show notification '" + msg + "'");
-        Intent notificationIntent = new Intent(context, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+
+        // Intent que traz a aplicação para primeiro plano.
+//        Intent notificationIntent = new Intent(context, MainActivity.class);
+//        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "lanpush")
                 .setSmallIcon(R.drawable.lanpush_small)
                 .setContentTitle("LANPUSH")
                 .setContentText(msg)
-                .setContentIntent(contentIntent)
+//                .setContentIntent(contentIntent)
+                .setContentIntent(getBrowserIntent(msg))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
-                .addAction(R.drawable.ic_launcher_foreground, "Copy", getClipboardIntent(msg))
-                .addAction(R.drawable.ic_launcher_foreground, "Browse", getBrowserIntent(msg));
+                .addAction(R.drawable.ic_launcher_foreground, "Copy", getClipboardIntent(msg));
+//                .addAction(R.drawable.ic_launcher_foreground, "Browse", getBrowserIntent(msg));
         // notificationId is a unique int for each notification that you must define
         notificationId += 3;
         notificationManager.notify(notificationId, builder.build());
     }
 
     private PendingIntent getClipboardIntent(String mensagem) {
-        android.util.Log.i("GETTING INTENT", "GETTING INTENT");
         Intent clipboardIntent = new Intent(context, ClipboardAction.class);
         clipboardIntent.putExtra("mensagem", mensagem);
+        clipboardIntent.putExtra("notificationId", notificationId);
         return PendingIntent.getBroadcast(context, notificationId+1, clipboardIntent, PendingIntent.FLAG_IMMUTABLE);
     }
 
@@ -96,6 +107,10 @@ public class Notificador {
 
         Log.i("Calling browser for " + uri.toString());
         return PendingIntent.getActivity(context, notificationId+2, browserAction, PendingIntent.FLAG_IMMUTABLE);
+//        Intent browserIntent = new Intent(context, BrowserAction.class);
+//        browserIntent.putExtra("mensagem", mensagem);
+//        browserIntent.putExtra("notificationId", notificationId);
+//        return PendingIntent.getBroadcast(context, notificationId+2, browserIntent, PendingIntent.FLAG_IMMUTABLE);
     }
 
     public void showToast(String msg) {

@@ -1,13 +1,9 @@
 package lcm.lanpush;
 
-import android.app.Activity;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 
 public class Sender {
     private static final String HOST = "192.168.0.255";
@@ -21,7 +17,7 @@ public class Sender {
             public void run() {
                 try {
                     String host = (port == DEBUG_PORT ? "192.168.0.66" : HOST);
-                    if ("[auto]".equals(message))
+                    if ("[auto]".equals(message) || "[stop]".equals(message))
                         host = "127.0.0.1";
 
                     // Get the internet address of the specified host
@@ -46,6 +42,9 @@ public class Sender {
     }
 
     public static void send(String message) {
+        send(message, LanpushApp.DEFAULT_PORT);
+    }
+    public static void sendDebug(String message) {
         send(message, DEBUG_PORT);
     }
 }

@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
+import lcm.lanpush.utils.Data;
+
 public class ListenningService extends Service {
     Alarm alarm = new Alarm();
     public void onCreate() {
@@ -26,13 +28,13 @@ public class ListenningService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        alarm.setAlarm(this);
+        alarm.setAlarm(Data.timestampProximaManha());
         return START_STICKY;
     }
 
     @Override
     public void onStart(Intent intent, int startId) {
-        alarm.setAlarm(this);
+        alarm.setAlarm(Data.timestampProximaManha());
     }
 
     @Override

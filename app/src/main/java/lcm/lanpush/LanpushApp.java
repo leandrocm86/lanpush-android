@@ -1,17 +1,21 @@
 package lcm.lanpush;
 
 import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.Application;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.TimeUnit;
 
+import android.app.PendingIntent;
 import android.content.ClipboardManager;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.SystemClock;
 import android.widget.TextView;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.JobIntentService;
 import androidx.preference.PreferenceManager;
 import androidx.work.ExistingPeriodicWorkPolicy;
@@ -20,6 +24,9 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 public class LanpushApp extends Application {
+
+    public static final int DEFAULT_PORT = 1050;
+    private static long lastAlarm;
 
     private static WeakReference<Context> context;
     private static WeakReference<MainActivity> mainActivity;
@@ -35,12 +42,16 @@ public class LanpushApp extends Application {
             ClientListenning.getInstance().setTimeout(timeout);
         }
 
+        restartWorker();
+
         PeriodicWorkRequest listener =
-                new PeriodicWorkRequest.Builder(ListenningWorker.class,
+                new PeriodicWorkRequest.Builder(PeriodicWorker.class,
                         PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS,
                         PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS, TimeUnit.MILLISECONDS)
                         .build();
-        WorkManager.getInstance(getContext()).enqueueUniquePeriodicWork("Listener", ExistingPeriodicWorkPolicy.KEEP, listener);
+        WorkManager.getInstance(getContext()).enqueueUniquePeriodicWork("Listener", ExistingPeriodicWorkPolicy.REPLACE, listener);
+
+        Alarm.setPeriodicAlarm();
 //        PeriodicWorkRequest lazaro =
 //                new PeriodicWorkRequest.Builder(LazaroWorker.class,
 //                        PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS,
@@ -49,6 +60,12 @@ public class LanpushApp extends Application {
 //        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("Lazaro", ExistingPeriodicWorkPolicy.KEEP, lazaro);
 //        new Alarm().setAlarm(getApplicationContext());
 //        Notificador.getInstance().showNotification("Test");
+
+    }
+
+    private void shutdown() {
+        System.exit(0);
+//        Android.OS.Process.KillProcess(Androi.OS.Process.MyPid());
     }
 
     @Override
@@ -66,15 +83,18 @@ public class LanpushApp extends Application {
 
     @Override
     public void onTrimMemory(int level) {
-        Log.i("OnTrimMemory: Level " + level + " - " + descriptionForMemoryLevel(level));
-        ActivityManager.MemoryInfo memoryInfo = getMemoryInfo();
-        Log.i("LowMemory: " + memoryInfo.lowMemory + ", used " + (Math.round(100-memoryInfo.availMem*100/memoryInfo.totalMem)) + "%");
-        if (level >= 40) {
-            Notificador.clean();
-            memoryInfo = getMemoryInfo();
-            Log.i("Objects cleared. LowMemory: " + memoryInfo.lowMemory + ", used " + (Math.round(100-memoryInfo.availMem*100/memoryInfo.totalMem)) + "%");
-        }
         super.onTrimMemory(level);
+        Log.i("OnTrimMemory: Level " + level + " - " + descriptionForMemoryLevel(level));
+        if (level >= 40) {
+            ActivityManager.MemoryInfo memoryInfo = getMemoryInfo();
+            Log.i("LowMemory: " + memoryInfo.lowMemory + ", used " + (Math.round(100-memoryInfo.availMem*100/memoryInfo.totalMem)) + "%");
+            if (System.currentTimeMillis() - lastAlarm > 60000) {
+                Alarm.setAlarm(System.currentTimeMillis() + 60000);
+                lastAlarm = System.currentTimeMillis();
+            }
+//            Log.i("Shutting down...");
+//            shutdown();
+        }
     }
 
     private ActivityManager.MemoryInfo getMemoryInfo() {
@@ -105,18 +125,12 @@ public class LanpushApp extends Application {
         }
     }
 
-    public static void restartService() {
-        Log.i("Order received to restart worker.");
-        PeriodicWorkRequest listener =
-                new PeriodicWorkRequest.Builder(ListenningWorker.class,
-                        PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS,
-                        PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS, TimeUnit.MILLISECONDS)
-                        .build();
-        WorkManager.getInstance(getContext()).enqueueUniquePeriodicWork("Listener", ExistingPeriodicWorkPolicy.REPLACE, listener);
-//        OneTimeWorkRequest mywork = new OneTimeWorkRequest.Builder(ListenningWorker.class)
-//                .setInitialDelay(1, TimeUnit.SECONDS)
-//                .build();
-//        WorkManager.getInstance(getContext()).enqueue(mywork);
+    public static void restartWorker() {
+        Log.i("Restarting worker...");
+        OneTimeWorkRequest mywork = new OneTimeWorkRequest.Builder(ListenningWorker.class)
+                .setInitialDelay(1, TimeUnit.SECONDS)
+                .build();
+        WorkManager.getInstance(getContext()).enqueue(mywork);
 //        Intent serviceIntent = new Intent();
 //        JobIntentService.enqueueWork(getContext(), ListenningService.class, RSS_JOB_ID, serviceIntent);
 //        if (isServiceRunning(ListenningService.class))

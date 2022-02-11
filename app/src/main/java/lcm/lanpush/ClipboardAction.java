@@ -19,12 +19,15 @@ public class ClipboardAction extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         try {
             String mensagem = intent.getStringExtra("mensagem");
+            int notificationId = intent.getIntExtra("notificationId", 0);
             ClipboardManager clipboard = LanpushApp.getClipboard();
             ClipData clip = ClipData.newPlainText(mensagem, mensagem);
             clipboard.setPrimaryClip(clip);
-            Notificador.getInstance().showToast("Copiado: " + (mensagem.length() < 20 ? mensagem : mensagem.substring(0, 30) + "..."));
-            NotificationManagerCompat.from(context.getApplicationContext()).cancelAll();
-            collpasePanel(context);
+            Notificador.getInstance().showToast("Copiado: " + (mensagem.length() < 20 ? mensagem : mensagem.substring(0, 40) + "..."));
+//            NotificationManagerCompat.from(context.getApplicationContext()).cancelAll();
+            Log.i("Cancelando notificacoes " + notificationId);
+            Notificador.getInstance().cancelNotification(notificationId);
+//            collpasePanel(context);
         }
         catch (Throwable t) {
             Log.e("Error while trying to copy message to clipboard", t);

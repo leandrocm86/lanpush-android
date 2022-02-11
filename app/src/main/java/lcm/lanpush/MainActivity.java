@@ -2,23 +2,16 @@ package lcm.lanpush;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Looper;
 import android.view.KeyEvent;
 import android.view.View;
 
-import androidx.core.app.JobIntentService;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -28,10 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.TextView;
-
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -121,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 Log.i("Reconectando...");
                 Notificador.getInstance().showToast("Reconectando...");
-                LanpushApp.restartService();
+                LanpushApp.restartWorker();
             } catch (Throwable t) {
                 Log.e(t);
             }

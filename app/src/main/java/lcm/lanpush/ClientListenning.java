@@ -32,19 +32,18 @@ public class ClientListenning {
     }
     public long getUltimaConexao() { return ultimaConexao; }
 
-    public void run() {
-//        if (!Data.madrugada())
-        escutar();
+    public boolean run() {
         if (erros == 3) {
             Notificador.getInstance().showNotification("Since there were 3 errors, the app is getting closed.");
             System.exit(1);
         }
+        return listen();
     }
 
-    private synchronized void escutar() {
+    private synchronized boolean listen() {
         if (running == true) {
             Log.i("Tried to execute listenner that was already running. Aborting...");
-            return;
+            return false;
         }
         running = true;
 //        Notificador.getInstance().showNotification("Teste");
@@ -58,10 +57,11 @@ public class ClientListenning {
             Log.i("Received: " + text);
             synchronized(this) {
                 // Espera um tempo pra ouvir de novo, evitando mensagens duplicadas.
-                if (System.currentTimeMillis() - ultimaMensagem > 3000 && !text.contains("[auto]"))
+                if (System.currentTimeMillis() - ultimaMensagem > 3000 && !text.contains("[auto]") && !text.contains("[stop]"))
                     Notificador.getInstance().showNotification(text);
                 ultimaMensagem = System.currentTimeMillis();
             }
+            return !text.contains("[stop]");
         } catch (SocketTimeoutException e) {
             Log.i("TIMEOUT!");
         } catch (Throwable t) {
@@ -72,6 +72,11 @@ public class ClientListenning {
             fecharConexao();
             running = false;
         }
+        return true;
+    }
+
+    public void stop() {
+        Sender.send("[stop]");
     }
 
     private String atualizaThread() {
@@ -85,7 +90,7 @@ public class ClientListenning {
             Log.i("Socket was already active while trying to reconnect. Closing it...");
             fecharConexao();
         }
-        udpSocket = new DatagramSocket(1050);
+        udpSocket = new DatagramSocket(LanpushApp.DEFAULT_PORT);
         byte[] message = new byte[8000];
         return new DatagramPacket(message, message.length);
     }

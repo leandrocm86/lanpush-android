@@ -32,21 +32,18 @@ public class ListenningWorker extends Worker {
 
             if (!Data.madrugada()) {
                 if (!ClientListenning.getInstance().isRunning()) {
-                    ClientListenning.getInstance().run();
-                    enqueueNextWork();
+                    listen();
                 } else if (execucaoDemorada()) {
                     Log.i("Client diz que está rodando, mas já era pra ter dado timeout. Enviando auto-mensagem...");
                     Sender.send("[auto]", 1050);
                     Thread.sleep(1000);
                     if (!ClientListenning.getInstance().isRunning()) {
                         Log.i("Client parece ter parado. Religando...");
-                        ClientListenning.getInstance().run();
-                        enqueueNextWork();
+                        listen();
                     } else if (execucaoDemorada()) {
                         Log.i("Auto-mensagem não surtiu efeito. Fechando a conexão e reiniciando...");
                         ClientListenning.getInstance().fecharConexao();
-                        ClientListenning.getInstance().run();
-                        enqueueNextWork();
+                        listen();
                     }
                 }
             }
@@ -56,6 +53,11 @@ public class ListenningWorker extends Worker {
             Log.e("Error executing ListenningWorker", t);
             return Result.failure();
         }
+    }
+
+    private void listen() {
+        if (ClientListenning.getInstance().run())
+            enqueueNextWork();
     }
 
     private boolean execucaoDemorada() {

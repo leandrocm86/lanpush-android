@@ -31,12 +31,12 @@ public class LazaroWorker {/*extends Worker {
                 if (Looper.myLooper() == null) {
                     Looper.prepare();
                 }
-                if (!ClientListenning.getInstance().isRunning()) {
+                if (!ClientListenning.inst.isRunning()) {
                     Log.i("Lázaro ressuscitando Worker...");
                     LanpushApp.restartService();
-                } else if (System.currentTimeMillis() - ClientListenning.getInstance().getUltimaConexao() > ClientListenning.TIMEOUT) {
+                } else if (System.currentTimeMillis() - ClientListenning.inst.getUltimaConexao() > ClientListenning.TIMEOUT) {
                     Log.i("Client diz que está rodando, mas já era pra ter dado timeout. Forçando reconexão...");
-                    ClientListenning.getInstance().fecharConexao();
+                    ClientListenning.inst.fecharConexao();
                     LanpushApp.restartService();
                 }
             } catch (Throwable t) {

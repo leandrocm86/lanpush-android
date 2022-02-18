@@ -5,10 +5,10 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.work.WorkerParameters;
 
-public class ListenningWorker extends LanpushWorker {
+public class PeriodicWorker extends LanpushWorker {
     private final Context context;
 
-    public ListenningWorker(@NonNull Context context, @NonNull WorkerParameters params) {
+    public PeriodicWorker(@NonNull Context context, @NonNull WorkerParameters params) {
         super(context, params);
         this.context = context;
     }
@@ -16,7 +16,7 @@ public class ListenningWorker extends LanpushWorker {
     @NonNull
     @Override
     public Result doWork() {
-        Log.i("Starting worker...");
+        Log.i("Starting periodic worker...");
         return super.doWork();
     }
 }

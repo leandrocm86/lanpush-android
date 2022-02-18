@@ -7,12 +7,13 @@
     <string name="hello_first_fragment"></string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
+    <string name="preference_connection_header">Connection</string>
     <string name="sync_header">Sync</string>
 
-    <!-- Messages Preferences -->
+    <!-- Connection Preferences -->
+    <string name="ips">IPs (for sending)</string>
+    <string name="UDP_port">UDP Port (for sending and receiving)</string>
     <string name="settings_timeout">Reconnection period</string>
-    <string name="reply_title">Default reply action</string>
 
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>

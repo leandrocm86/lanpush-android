@@ -24,7 +24,7 @@ public class SelectionActivity extends AppCompatActivity {
             if (text != null) {
                 String msg = text.toString().trim();
                 if (!msg.isEmpty()) {
-                    Sender.send(msg, 1050);
+                    Sender.send(msg);
                     Notificador.getInstance().showToast("Text Sent!");
                 }
             }

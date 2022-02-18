@@ -5,7 +5,7 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
-public class ClientListenning {
+public class Receiver {
 
     public static final int DEFAULT_TIMEOUT = 60000; // 1min
     private int timeout = DEFAULT_TIMEOUT;
@@ -17,14 +17,10 @@ public class ClientListenning {
     private String penultimaThread = "";
     private String threadAtual = "";
 
-    private static ClientListenning instance;
+    public static final Receiver inst = new Receiver();
 
-    private ClientListenning() {}
-
-    public static ClientListenning getInstance() {
-        if (instance == null)
-            instance = new ClientListenning();
-        return instance;
+    private Receiver() {
+        Log.i("Creating Receiver.");
     }
 
     public boolean isRunning() {
@@ -51,7 +47,7 @@ public class ClientListenning {
             DatagramPacket packet = reconectar();
             udpSocket.setSoTimeout(timeout);
             ultimaConexao = System.currentTimeMillis();
-            Log.i("UDP: about to wait (" + erros + " errors, timeout " + timeout + ", thread " + atualizaThread() + ")");
+            Log.i("Listener reconnecting. About to wait on UDP (" + erros + " errors, timeout " + timeout + ", thread " + atualizaThread() + ")");
             udpSocket.receive(packet);
             String text = new String(packet.getData(), 0, packet.getLength()).trim();
             Log.i("Received: " + text);
@@ -63,7 +59,7 @@ public class ClientListenning {
             }
             return !text.contains("[stop]");
         } catch (SocketTimeoutException e) {
-            Log.i("TIMEOUT!");
+            Log.i("Listener timeout!");
         } catch (Throwable t) {
             erros++;
             Log.e("Error while listenning!", t);
@@ -90,7 +86,7 @@ public class ClientListenning {
             Log.i("Socket was already active while trying to reconnect. Closing it...");
             fecharConexao();
         }
-        udpSocket = new DatagramSocket(LanpushApp.DEFAULT_PORT);
+        udpSocket = new DatagramSocket(LanpushApp.getPort());
         byte[] message = new byte[8000];
         return new DatagramPacket(message, message.length);
     }
@@ -101,7 +97,7 @@ public class ClientListenning {
                 if (udpSocket.isClosed())
                     Log.i("Connection was already closed.");
                 else {
-                    Log.i("Closing connection...");
+//                    Log.i("Closing connection...");
                     udpSocket.disconnect();
                     udpSocket.close();
                     udpSocket = null;
@@ -120,6 +116,7 @@ public class ClientListenning {
         this.timeout = timeout;
         Log.i("Timeout set: " + timeout);
     }
+
     public int getTimeout() {
         return timeout;
     }

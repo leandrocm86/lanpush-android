@@ -32,6 +32,7 @@
             </intent-filter>
         </activity>
         <receiver android:name=".Alarm" android:exported="true"/>
+        <receiver android:name=".PeriodicAlarm" android:exported="true"/>
         <receiver android:name=".AutoStart" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>

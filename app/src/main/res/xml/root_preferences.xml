@@ -1,19 +1,29 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory app:title="@string/preference_connection_header">
+
+        <EditTextPreference
+            app:key="ips"
+            app:title="@string/ips"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="port"
+            app:title="@string/UDP_port"
+            app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             app:key="timeout"
             app:title="@string/settings_timeout"
             app:useSimpleSummaryProvider="true" />
 
-        <ListPreference
+       <!-- <ListPreference
             app:defaultValue="reply"
             app:entries="@array/reply_entries"
             app:entryValues="@array/reply_values"
             app:key="reply"
             app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true" />-->
 
     </PreferenceCategory>
 

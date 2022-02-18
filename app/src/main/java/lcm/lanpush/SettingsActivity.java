@@ -1,13 +1,9 @@
 package lcm.lanpush;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.EditTextPreference;
 import android.text.InputType;
 import android.widget.EditText;
@@ -15,7 +11,10 @@ import android.widget.EditText;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import lcm.lanpush.databinding.ActivityMainBinding;
+import lcm.lanpush.preferences.IPsPreference;
+import lcm.lanpush.preferences.LanpushPreference;
+import lcm.lanpush.preferences.PortPreference;
+import lcm.lanpush.preferences.TimeoutPreference;
 
 public class SettingsActivity extends PreferenceActivity {
 
@@ -44,32 +43,41 @@ public class SettingsActivity extends PreferenceActivity {
             Log.i("onCreatePreferences");
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
-            EditTextPreference timeoutPreferences = (EditTextPreference) findPreference("timeout");
-            if (timeoutPreferences != null) {
+            loadPreference(new IPsPreference(), InputType.TYPE_CLASS_TEXT);
+            loadPreference(new PortPreference(), InputType.TYPE_CLASS_NUMBER);
+            loadPreference(new TimeoutPreference(), InputType.TYPE_CLASS_NUMBER);
+        }
+
+        private void loadPreference(LanpushPreference preference, int type) {
+            EditTextPreference textPreference = (EditTextPreference) findPreference(preference.getName());
+            if (textPreference != null) {
                 if (LanpushApp.getMainActivity() != null)
                     LanpushApp.getMainActivity().hideButton();
-                String timeoutText = LanpushApp.getPreference("timeout");
-                timeoutPreferences.setText(timeoutText != null ? timeoutText : ClientListenning.DEFAULT_TIMEOUT + "");
-                timeoutPreferences.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                String savedPreference = preference.getValue();
+                textPreference.setText(savedPreference != null ? savedPreference : preference.getDefaultValue() + "");
+                textPreference.setOnPreferenceChangeListener(new androidx.preference.Preference.OnPreferenceChangeListener() {
                     @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        Log.i("TIMEOUT onPreferenceChange: " + newValue + (newValue.getClass().getName()));
-                        int novoTimeout = Integer.parseInt(newValue.toString());
-                        LanpushApp.setIntPreference("timeout", novoTimeout);
-                        ClientListenning.getInstance().setTimeout(novoTimeout);
+                    public boolean onPreferenceChange(Preference androidPreference, Object newValue) {
+                        Log.i(preference.getName() + " onPreferenceChange: " + newValue + (newValue.getClass().getName()));
+                        preference.saveValue(newValue.toString());
+                        preference.apply(newValue.toString());
                         return true;
                     }
                 });
-                timeoutPreferences.setOnBindEditTextListener(new EditTextPreference.OnBindEditTextListener() {
+                textPreference.setOnBindEditTextListener(new EditTextPreference.OnBindEditTextListener() {
                     @Override
                     public void onBindEditText(@NonNull EditText editText) {
-                        Log.i("TIMEOUT onBindEditText " + editText.getText().toString());
-                        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                        Log.i(preference.getName() + " onBindEditText " + editText.getText().toString());
+                        editText.setInputType(type);
                     }
                 });
             }
             else
-                Log.e("Unable to show preferences!");
+                Log.e("Unable to show preference: " + preference.getName());
+        }
+
+        private interface PreferenceChangeAction {
+            public void run(String newValue);
         }
 
         @Override

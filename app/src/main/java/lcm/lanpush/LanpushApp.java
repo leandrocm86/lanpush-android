@@ -1,32 +1,33 @@
 package lcm.lanpush;
 
 import android.app.ActivityManager;
-import android.app.AlarmManager;
 import android.app.Application;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.TimeUnit;
 
-import android.app.PendingIntent;
 import android.content.ClipboardManager;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.SystemClock;
 import android.widget.TextView;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.JobIntentService;
 import androidx.preference.PreferenceManager;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import lcm.lanpush.preferences.IPsPreference;
+import lcm.lanpush.preferences.PortPreference;
+import lcm.lanpush.preferences.LanpushPreference;
+import lcm.lanpush.preferences.TimeoutPreference;
+import lcm.lanpush.utils.Data;
+
 public class LanpushApp extends Application {
 
     public static final int DEFAULT_PORT = 1050;
-    private static long lastAlarm;
+    private static int port = DEFAULT_PORT;
+    private static long lastConnectionCheck;
 
     private static WeakReference<Context> context;
     private static WeakReference<MainActivity> mainActivity;
@@ -37,11 +38,7 @@ public class LanpushApp extends Application {
         Log.i("Creating LanpushApp");
         super.onCreate();
         context = new WeakReference<>(getApplicationContext());
-        Integer timeout = getIntPreference("timeout");
-        if (timeout != null) {
-            ClientListenning.getInstance().setTimeout(timeout);
-        }
-
+        loadPreferences();
         restartWorker();
 
         PeriodicWorkRequest listener =
@@ -51,7 +48,7 @@ public class LanpushApp extends Application {
                         .build();
         WorkManager.getInstance(getContext()).enqueueUniquePeriodicWork("Listener", ExistingPeriodicWorkPolicy.REPLACE, listener);
 
-        Alarm.setPeriodicAlarm();
+        PeriodicAlarm.setPeriodicAlarm();
 //        PeriodicWorkRequest lazaro =
 //                new PeriodicWorkRequest.Builder(LazaroWorker.class,
 //                        PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS,
@@ -61,6 +58,12 @@ public class LanpushApp extends Application {
 //        new Alarm().setAlarm(getApplicationContext());
 //        Notificador.getInstance().showNotification("Test");
 
+    }
+
+    private void loadPreferences() {
+        LanpushPreference[] lanpushPreferences = {new IPsPreference(), new PortPreference(), new TimeoutPreference()};
+        for (LanpushPreference lanpushPreference : lanpushPreferences)
+            lanpushPreference.load();
     }
 
     private void shutdown() {
@@ -86,11 +89,12 @@ public class LanpushApp extends Application {
         super.onTrimMemory(level);
         Log.i("OnTrimMemory: Level " + level + " - " + descriptionForMemoryLevel(level));
         if (level >= 40) {
-            ActivityManager.MemoryInfo memoryInfo = getMemoryInfo();
-            Log.i("LowMemory: " + memoryInfo.lowMemory + ", used " + (Math.round(100-memoryInfo.availMem*100/memoryInfo.totalMem)) + "%");
-            if (System.currentTimeMillis() - lastAlarm > 60000) {
-                Alarm.setAlarm(System.currentTimeMillis() + 60000);
-                lastAlarm = System.currentTimeMillis();
+            if (System.currentTimeMillis() - lastConnectionCheck > 60000) {
+                ActivityManager.MemoryInfo memoryInfo = getMemoryInfo();
+                Log.i("LowMemory: " + memoryInfo.lowMemory + ", used " + (Math.round(100-memoryInfo.availMem*100/memoryInfo.totalMem)) + "%");
+                if (!Data.madrugada())
+                    Alarm.setAlarm(System.currentTimeMillis() + 60000);
+                lastConnectionCheck = System.currentTimeMillis();
             }
 //            Log.i("Shutting down...");
 //            shutdown();
@@ -175,35 +179,12 @@ public class LanpushApp extends Application {
         return (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
     }
 
-    public static String getPreference(String key) {
-        String value = null;
-        try {
-            value = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(key, null);
-            if (value == null) {
-                Log.e("Preference not found: " + key);
-            }
-        }
-        catch (ClassCastException e) {
-            Log.e("Preference saved was not a String. Clearing the preferences...");
-            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-            editor.clear();
-            editor.commit();
-        }
-        return value;
+    public static void setPort(int port) {
+        port = port;
+        Log.i("Port set: " + port);
     }
 
-    public static Integer getIntPreference(String key) {
-        String value = getPreference(key);
-        if (value == null)
-            return null;
-        else {
-            return Integer.parseInt(value);
-        }
-    }
-
-    public static void setIntPreference(String key, int value) {
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-        editor.putString(key, value + "");
-        editor.commit();
+    public static int getPort() {
+        return port;
     }
 }

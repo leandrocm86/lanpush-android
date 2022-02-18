@@ -23,17 +23,20 @@ import lcm.lanpush.utils.Data;
 public class ListenningService extends Service {
     Alarm alarm = new Alarm();
     public void onCreate() {
+        Log.i("LISTENNING SERVICE!");
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i("LISTENNING SERVICE onStartCommand");
         alarm.setAlarm(Data.timestampProximaManha());
         return START_STICKY;
     }
 
     @Override
     public void onStart(Intent intent, int startId) {
+        Log.i("LISTENNING SERVICE onStart");
         alarm.setAlarm(Data.timestampProximaManha());
     }
 

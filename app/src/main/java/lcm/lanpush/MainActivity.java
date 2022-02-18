@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                         getInputManager().hideSoftInputFromWindow(binding.input.getWindowToken(), 0);
                         showButton();
                         binding.input.setVisibility(View.GONE);
-                        Sender.send(binding.input.getText().toString(), 1050);
+                        Sender.send(binding.input.getText().toString());
                         Notificador.getInstance().showToast("Sent!");
                         binding.input.setText("");
                         return true;

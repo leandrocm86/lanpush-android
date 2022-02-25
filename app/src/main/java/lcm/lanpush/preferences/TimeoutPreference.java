@@ -4,13 +4,15 @@ import lcm.lanpush.Receiver;
 
 public class TimeoutPreference extends LanpushPreference {
 
-    public TimeoutPreference() {
+    public static final TimeoutPreference inst = new TimeoutPreference();
+
+    private TimeoutPreference() {
         super("timeout", Receiver.DEFAULT_TIMEOUT + "");
     }
 
     @Override
-    public void apply(Object value) {
-        Receiver.inst.setTimeout(Integer.parseInt(value.toString()));
+    public void apply(String value) {
+        Receiver.inst.setTimeout(Integer.parseInt(value));
     }
 
 }

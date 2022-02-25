@@ -1,27 +1,13 @@
 package lcm.lanpush;
 
-import android.app.Activity;
-import android.app.IntentService;
 import android.app.Service;
-import android.app.job.JobParameters;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.os.Build;
 import android.os.IBinder;
-import android.os.Looper;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.JobIntentService;
-
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-
+import lcm.lanpush.alarms.CheckAlarm;
 import lcm.lanpush.utils.Data;
 
 public class ListenningService extends Service {
-    Alarm alarm = new Alarm();
     public void onCreate() {
         Log.i("LISTENNING SERVICE!");
         super.onCreate();
@@ -30,14 +16,14 @@ public class ListenningService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("LISTENNING SERVICE onStartCommand");
-        alarm.setAlarm(Data.timestampProximaManha());
+        CheckAlarm.inst.setAlarm(Data.timestampProximaManha());
         return START_STICKY;
     }
 
     @Override
     public void onStart(Intent intent, int startId) {
         Log.i("LISTENNING SERVICE onStart");
-        alarm.setAlarm(Data.timestampProximaManha());
+        CheckAlarm.inst.setAlarm(Data.timestampProximaManha());
     }
 
     @Override

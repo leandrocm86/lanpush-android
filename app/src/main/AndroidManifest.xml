@@ -31,8 +31,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".Alarm" android:exported="true"/>
-        <receiver android:name=".PeriodicAlarm" android:exported="true"/>
+        <receiver android:name=".alarms.CheckAlarm" android:exported="true"/>
+        <receiver android:name=".alarms.PeriodicCheckAlarm" android:exported="true"/>
         <receiver android:name=".AutoStart" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>

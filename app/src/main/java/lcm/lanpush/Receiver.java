@@ -5,9 +5,11 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
+import lcm.lanpush.preferences.TimeoutPreference;
+
 public class Receiver {
 
-    public static final int DEFAULT_TIMEOUT = 60000; // 1min
+    public static final int DEFAULT_TIMEOUT = 300000; // 5min
     private int timeout = DEFAULT_TIMEOUT;
     private int erros = 0;
     private DatagramSocket udpSocket;
@@ -20,7 +22,8 @@ public class Receiver {
     public static final Receiver inst = new Receiver();
 
     private Receiver() {
-        Log.i("Creating Receiver.");
+        Log.i("Creating Receiver...");
+        setTimeout(Integer.parseInt(TimeoutPreference.inst.getValue()));
     }
 
     public boolean isRunning() {
@@ -30,7 +33,7 @@ public class Receiver {
 
     public boolean run() {
         if (erros == 3) {
-            Notificador.getInstance().showNotification("Since there were 3 errors, the app is getting closed.");
+            Notificador.inst.showNotification("Since there were 3 errors, the app is getting closed.");
             System.exit(1);
         }
         return listen();
@@ -54,7 +57,7 @@ public class Receiver {
             synchronized(this) {
                 // Espera um tempo pra ouvir de novo, evitando mensagens duplicadas.
                 if (System.currentTimeMillis() - ultimaMensagem > 3000 && !text.contains("[auto]") && !text.contains("[stop]"))
-                    Notificador.getInstance().showNotification(text);
+                    Notificador.inst.showNotification(text);
                 ultimaMensagem = System.currentTimeMillis();
             }
             return !text.contains("[stop]");
@@ -72,7 +75,7 @@ public class Receiver {
     }
 
     public void stop() {
-        Sender.send("[stop]");
+        Sender.inst().send("[stop]");
     }
 
     private String atualizaThread() {

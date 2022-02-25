@@ -16,7 +16,7 @@ public class Notificador {
     private static int notificationId = Math.round(System.currentTimeMillis() / 60000);
     private Context context;
     private NotificationManager notificationManager;
-    private static Notificador instance;
+    public static final Notificador inst = new Notificador(LanpushApp.getContext());
 
     private Notificador(Context context) {
         this.context = context;
@@ -38,22 +38,12 @@ public class Notificador {
         }
     }
 
-    public static Notificador getInstance() {
-        if (instance == null)
-            instance = new Notificador(LanpushApp.getContext());
-        return instance;
-    }
-
     public void cancelNotification(int notificationId) {
         NotificationManagerCompat manager = NotificationManagerCompat.from(context.getApplicationContext());
         manager.cancel(notificationId);
         manager.cancel(notificationId+1); // ClipboardAction
         manager.cancel(notificationId+2); // BrowserAction
         manager.cancel(notificationId+3); // Notification
-    }
-
-    public static void clean() {
-        instance = null;
     }
 
     public void showNotification(String msg) {

@@ -77,7 +77,7 @@ public class Log {
     private static void sendDebug(String msg, boolean ligado) {
         if (ligado) {
             msg = "L" + ++id + msg + "\n";
-            Sender.sendDebug(msg);
+            Sender.inst().sendDebug(msg);
         }
     }
 

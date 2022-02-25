@@ -1,16 +1,11 @@
 package lcm.lanpush;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
-
-import androidx.core.app.NotificationManagerCompat;
 
 
 public class ClipboardAction extends BroadcastReceiver {
@@ -23,10 +18,10 @@ public class ClipboardAction extends BroadcastReceiver {
             ClipboardManager clipboard = LanpushApp.getClipboard();
             ClipData clip = ClipData.newPlainText(mensagem, mensagem);
             clipboard.setPrimaryClip(clip);
-            Notificador.getInstance().showToast("Copiado: " + (mensagem.length() < 20 ? mensagem : mensagem.substring(0, 40) + "..."));
+            Notificador.inst.showToast("Copiado: " + (mensagem.length() < 20 ? mensagem : mensagem.substring(0, 40) + "..."));
 //            NotificationManagerCompat.from(context.getApplicationContext()).cancelAll();
             Log.i("Cancelando notificacoes " + notificationId);
-            Notificador.getInstance().cancelNotification(notificationId);
+            Notificador.inst.cancelNotification(notificationId);
 //            collpasePanel(context);
         }
         catch (Throwable t) {

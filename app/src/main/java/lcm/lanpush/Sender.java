@@ -5,13 +5,26 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import lcm.lanpush.preferences.IPsPreference;
+
 public class Sender {
     public static final String[] DEFAULT_HOSTS = {"192.168.0.255"};
-    private static String[] hosts = DEFAULT_HOSTS;
-    private static String DEBUG_HOST = "192.168.0.66";
+    private String[] hosts = DEFAULT_HOSTS;
+    private String DEBUG_HOST = "192.168.0.66";
     private static final int DEBUG_PORT = 1051;
 
-    private static void send(String message, String host, int port) {
+    private static Sender inst;
+
+    public static Sender inst() {
+        if (inst == null) {
+            inst = new Sender();
+            IPsPreference.inst.load();
+            Log.i("Sender created.");
+        }
+        return inst;
+    }
+
+    private void send(String message, String host, int port) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -37,7 +50,7 @@ public class Sender {
             }}).start();
     }
 
-    public static void send(String message) {
+    public void send(String message) {
         if ("[auto]".equals(message) || "[stop]".equals(message))
             send(message, "127.0.0.1", LanpushApp.getPort());
         else {
@@ -45,11 +58,11 @@ public class Sender {
                 send(message, host, LanpushApp.getPort());
         }
     }
-    public static void sendDebug(String message) {
+    public void sendDebug(String message) {
         send(message, DEBUG_HOST, DEBUG_PORT);
     }
 
-    public static void setHosts(String[] ips) {
+    public void setHosts(String[] ips) {
         String hostsStr = ips[0];
         for (int i = 1; i < ips.length; i++)
             hostsStr += ", " + ips[i];

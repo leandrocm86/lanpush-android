@@ -1,7 +1,9 @@
 package lcm.lanpush;
 
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -15,7 +17,11 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import lcm.lanpush.alarms.CheckAlarm;
+import lcm.lanpush.alarms.PeriodicCheckAlarm;
 import lcm.lanpush.databinding.ActivityMainBinding;
+import lcm.lanpush.workers.LanpushWorker;
+import lcm.lanpush.workers.PeriodicWorker;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
                         getInputManager().hideSoftInputFromWindow(binding.input.getWindowToken(), 0);
                         showButton();
                         binding.input.setVisibility(View.GONE);
-                        Sender.send(binding.input.getText().toString());
-                        Notificador.getInstance().showToast("Sent!");
+                        Sender.inst().send(binding.input.getText().toString());
+                        Notificador.inst.showToast("Sent!");
                         binding.input.setText("");
                         return true;
                     }
@@ -110,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_reconnection) {
             try {
                 Log.i("Reconectando...");
-                Notificador.getInstance().showToast("Reconectando...");
+                Notificador.inst.showToast("Reconectando...");
                 LanpushApp.restartWorker();
             } catch (Throwable t) {
                 Log.e(t);
@@ -120,6 +126,32 @@ public class MainActivity extends AppCompatActivity {
             NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
 //            NavigationUI.navigateUp(navController, appBarConfiguration);
             navController.navigate(R.id.settings);
+        }
+        else if (id == R.id.action_about) {
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.about)
+                    .setPositiveButton(R.string.about_git, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // FIRE ZE MISSILES!
+                        }
+                    })
+                    .setNegativeButton(R.string.about_close, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    })
+                    .setIcon(R.drawable.lanpush_small);
+            // Create the AlertDialog object and return it
+            builder.create().show();
+        }
+        else if (id == R.id.action_close) {
+            Log.i("Closing the application...");
+            LanpushWorker.cancel();
+            CheckAlarm.inst.cancel();
+            PeriodicCheckAlarm.inst.cancel();
+            finishAffinity();
+            finishAndRemoveTask();
         }
 
         return super.onOptionsItemSelected(item);

@@ -1,17 +1,20 @@
-package lcm.lanpush;
+package lcm.lanpush.alarms;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
+import lcm.lanpush.LanpushApp;
+import lcm.lanpush.Log;
+import lcm.lanpush.Receiver;
 import lcm.lanpush.utils.Data;
 
-public class Alarm extends BroadcastReceiver {
+public class CheckAlarm extends Alarm {
 
-    private static int id = Math.round(System.currentTimeMillis() / 60000);
+//    private static int id = Math.round(System.currentTimeMillis() / 60000);
+    public static final CheckAlarm inst = new CheckAlarm();
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -29,8 +32,8 @@ public class Alarm extends BroadcastReceiver {
 //        wl.release();
     }
 
-    public static void setAlarm(long triggerAtMillis) {
-        AlarmManager alarmMgr = getAlarmManager();
+    public void setAlarm(long triggerAtMillis) {
+        AlarmManager alarmMgr = super.getAlarmManager();
         if (Build.VERSION.SDK_INT < 31 || alarmMgr.canScheduleExactAlarms()) {
             Log.i("Configuring wake up in " + Data.formataTempo(triggerAtMillis - System.currentTimeMillis()));
             alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, getPendingIntent());
@@ -39,19 +42,10 @@ public class Alarm extends BroadcastReceiver {
         }
     }
 
-    protected static AlarmManager getAlarmManager() {
-        return (AlarmManager) LanpushApp.getContext().getSystemService(Context.ALARM_SERVICE);
+    @Override
+    protected PendingIntent getPendingIntent() {
+        Intent i = new Intent(LanpushApp.getContext(), CheckAlarm.class);
+        return PendingIntent.getBroadcast(LanpushApp.getContext(), 1, i, PendingIntent.FLAG_IMMUTABLE);
     }
 
-    private static PendingIntent getPendingIntent() {
-        Intent i = new Intent(LanpushApp.getContext(), Alarm.class);
-        return PendingIntent.getBroadcast(LanpushApp.getContext(), ++id, i, PendingIntent.FLAG_IMMUTABLE);
-    }
-
-//    public void cancelAlarm(Context context) {
-//        Intent intent = new Intent(context, Alarm.class);
-//        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
-//        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//        alarmManager.cancel(sender);
-//    }
 }

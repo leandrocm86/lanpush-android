@@ -4,12 +4,14 @@ import lcm.lanpush.LanpushApp;
 
 public class PortPreference extends LanpushPreference {
 
-    public PortPreference() {
+    public static final PortPreference inst = new PortPreference();
+
+    private PortPreference() {
         super("port", LanpushApp.DEFAULT_PORT + "");
     }
 
     @Override
-    public void apply(Object value) {
-        LanpushApp.setPort(Integer.parseInt(value.toString()));
+    public void apply(String value) {
+        LanpushApp.setPort(Integer.parseInt(value));
     }
 }

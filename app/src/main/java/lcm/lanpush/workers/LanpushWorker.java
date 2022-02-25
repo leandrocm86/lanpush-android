@@ -1,4 +1,4 @@
-package lcm.lanpush;
+package lcm.lanpush.workers;
 
 import android.content.Context;
 import android.os.Looper;
@@ -11,6 +11,10 @@ import androidx.work.WorkerParameters;
 
 import java.util.concurrent.TimeUnit;
 
+import lcm.lanpush.LanpushApp;
+import lcm.lanpush.Log;
+import lcm.lanpush.Receiver;
+import lcm.lanpush.Sender;
 import lcm.lanpush.utils.Data;
 
 public class LanpushWorker extends Worker {
@@ -34,7 +38,7 @@ public class LanpushWorker extends Worker {
                     listen();
                 } else if (execucaoDemorada()) {
                     Log.i("Client diz que está rodando, mas já era pra ter dado timeout. Enviando auto-mensagem...");
-                    Sender.send("[auto]");
+                    Sender.inst().send("[auto]");
                     Thread.sleep(1000);
                     if (!Receiver.inst.isRunning()) {
                         Log.i("Client parece ter parado. Religando...");
@@ -49,7 +53,7 @@ public class LanpushWorker extends Worker {
 
             return Result.success();
         } catch (Throwable t) {
-            Log.e("Error executing ListenningWorker", t);
+            Log.e("Error executing Worker", t);
             return Result.failure();
         }
     }
@@ -69,5 +73,9 @@ public class LanpushWorker extends Worker {
                 .setInitialDelay(1, TimeUnit.SECONDS)
                 .build();
         WorkManager.getInstance(context).enqueue(mywork);
+    }
+
+    public static void cancel() {
+        WorkManager.getInstance(LanpushApp.getContext()).cancelAllWork();
     }
 }

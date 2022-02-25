@@ -1,9 +1,12 @@
-package lcm.lanpush;
+package lcm.lanpush.workers;
 
 import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.work.WorkerParameters;
+
+import lcm.lanpush.Log;
+import lcm.lanpush.workers.LanpushWorker;
 
 public class ListenningWorker extends LanpushWorker {
     private final Context context;

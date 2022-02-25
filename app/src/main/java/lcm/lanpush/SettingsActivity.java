@@ -43,9 +43,9 @@ public class SettingsActivity extends PreferenceActivity {
             Log.i("onCreatePreferences");
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
-            loadPreference(new IPsPreference(), InputType.TYPE_CLASS_TEXT);
-            loadPreference(new PortPreference(), InputType.TYPE_CLASS_NUMBER);
-            loadPreference(new TimeoutPreference(), InputType.TYPE_CLASS_NUMBER);
+            loadPreference(IPsPreference.inst, InputType.TYPE_CLASS_TEXT);
+            loadPreference(PortPreference.inst, InputType.TYPE_CLASS_NUMBER);
+            loadPreference(TimeoutPreference.inst, InputType.TYPE_CLASS_NUMBER);
         }
 
         private void loadPreference(LanpushPreference preference, int type) {
@@ -53,14 +53,12 @@ public class SettingsActivity extends PreferenceActivity {
             if (textPreference != null) {
                 if (LanpushApp.getMainActivity() != null)
                     LanpushApp.getMainActivity().hideButton();
-                String savedPreference = preference.getValue();
-                textPreference.setText(savedPreference != null ? savedPreference : preference.getDefaultValue() + "");
+                textPreference.setText(preference.getValue());
                 textPreference.setOnPreferenceChangeListener(new androidx.preference.Preference.OnPreferenceChangeListener() {
                     @Override
                     public boolean onPreferenceChange(Preference androidPreference, Object newValue) {
                         Log.i(preference.getName() + " onPreferenceChange: " + newValue + (newValue.getClass().getName()));
-                        preference.saveValue(newValue.toString());
-                        preference.apply(newValue.toString());
+                        preference.changeValue(newValue.toString());
                         return true;
                     }
                 });
@@ -74,10 +72,6 @@ public class SettingsActivity extends PreferenceActivity {
             }
             else
                 Log.e("Unable to show preference: " + preference.getName());
-        }
-
-        private interface PreferenceChangeAction {
-            public void run(String newValue);
         }
 
         @Override

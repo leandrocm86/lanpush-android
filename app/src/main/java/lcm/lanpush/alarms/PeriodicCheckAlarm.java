@@ -1,4 +1,4 @@
-package lcm.lanpush;
+package lcm.lanpush.alarms;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -6,9 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 
+import lcm.lanpush.LanpushApp;
+import lcm.lanpush.Log;
+import lcm.lanpush.Receiver;
 import lcm.lanpush.utils.Data;
 
-public class PeriodicAlarm extends Alarm {
+public class PeriodicCheckAlarm extends Alarm {
+
+    public static final PeriodicCheckAlarm inst = new PeriodicCheckAlarm();
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -30,22 +35,16 @@ public class PeriodicAlarm extends Alarm {
 //        wl.release();
     }
 
-    public static void setPeriodicAlarm() {
+    public void setPeriodicAlarm() {
         Log.i("Setting periodic Alarm...");
         getAlarmManager().setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES,
-                AlarmManager.INTERVAL_FIFTEEN_MINUTES, getPeriodicPendingIntent());
+                AlarmManager.INTERVAL_FIFTEEN_MINUTES, getPendingIntent());
     }
 
-    private static PendingIntent getPeriodicPendingIntent() {
-        Intent i = new Intent(LanpushApp.getContext(), PeriodicAlarm.class);
+    @Override
+    protected PendingIntent getPendingIntent() {
+        Intent i = new Intent(LanpushApp.getContext(), PeriodicCheckAlarm.class);
         return PendingIntent.getBroadcast(LanpushApp.getContext(), 0, i, PendingIntent.FLAG_IMMUTABLE);
     }
-
-//    public void cancelAlarm(Context context) {
-//        Intent intent = new Intent(context, Alarm.class);
-//        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
-//        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//        alarmManager.cancel(sender);
-//    }
 }

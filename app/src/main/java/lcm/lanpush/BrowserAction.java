@@ -1,16 +1,10 @@
 package lcm.lanpush;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-
-import androidx.core.app.NotificationManagerCompat;
 
 // Parou de funcionar no Android 12.
 // O navegador só abre quando a aplicação está em primeiro plano, se for chamado de dentro do Receiver.
@@ -34,7 +28,7 @@ public class BrowserAction extends BroadcastReceiver {
             browserAction.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Log.i("Calling browser for " + uri.toString());
             context.startActivity(browserAction);
-            Notificador.getInstance().cancelNotification(notificationId);
+            Notificador.inst.cancelNotification(notificationId);
         }
         catch (Throwable t) {
             Log.e("Error while trying to open browser", t);

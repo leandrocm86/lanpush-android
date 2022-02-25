@@ -2,9 +2,6 @@ package lcm.lanpush;
 
 import android.app.ActivityManager;
 import android.app.Application;
-import java.lang.ref.WeakReference;
-import java.util.concurrent.TimeUnit;
-
 import android.content.ClipboardManager;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
@@ -17,11 +14,15 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import lcm.lanpush.preferences.IPsPreference;
+import java.lang.ref.WeakReference;
+import java.util.concurrent.TimeUnit;
+
+import lcm.lanpush.alarms.CheckAlarm;
+import lcm.lanpush.alarms.PeriodicCheckAlarm;
 import lcm.lanpush.preferences.PortPreference;
-import lcm.lanpush.preferences.LanpushPreference;
-import lcm.lanpush.preferences.TimeoutPreference;
 import lcm.lanpush.utils.Data;
+import lcm.lanpush.workers.ListenningWorker;
+import lcm.lanpush.workers.PeriodicWorker;
 
 public class LanpushApp extends Application {
 
@@ -35,20 +36,15 @@ public class LanpushApp extends Application {
 
     @Override
     public void onCreate() {
-        Log.i("Creating LanpushApp");
-        super.onCreate();
         context = new WeakReference<>(getApplicationContext());
-        loadPreferences();
+        Log.i("---------- Creating LanpushApp ----------");
+        super.onCreate();
+        PortPreference.inst.load();
         restartWorker();
 
-        PeriodicWorkRequest listener =
-                new PeriodicWorkRequest.Builder(PeriodicWorker.class,
-                        PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS,
-                        PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS, TimeUnit.MILLISECONDS)
-                        .build();
-        WorkManager.getInstance(getContext()).enqueueUniquePeriodicWork("Listener", ExistingPeriodicWorkPolicy.REPLACE, listener);
+        PeriodicWorker.setPeriodicWorker();
 
-        PeriodicAlarm.setPeriodicAlarm();
+        PeriodicCheckAlarm.inst.setPeriodicAlarm();
 //        PeriodicWorkRequest lazaro =
 //                new PeriodicWorkRequest.Builder(LazaroWorker.class,
 //                        PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS,
@@ -60,13 +56,7 @@ public class LanpushApp extends Application {
 
     }
 
-    private void loadPreferences() {
-        LanpushPreference[] lanpushPreferences = {new IPsPreference(), new PortPreference(), new TimeoutPreference()};
-        for (LanpushPreference lanpushPreference : lanpushPreferences)
-            lanpushPreference.load();
-    }
-
-    private void shutdown() {
+    public static void shutdown() {
         System.exit(0);
 //        Android.OS.Process.KillProcess(Androi.OS.Process.MyPid());
     }
@@ -93,7 +83,7 @@ public class LanpushApp extends Application {
                 ActivityManager.MemoryInfo memoryInfo = getMemoryInfo();
                 Log.i("LowMemory: " + memoryInfo.lowMemory + ", used " + (Math.round(100-memoryInfo.availMem*100/memoryInfo.totalMem)) + "%");
                 if (!Data.madrugada())
-                    Alarm.setAlarm(System.currentTimeMillis() + 60000);
+                    CheckAlarm.inst.setAlarm(System.currentTimeMillis() + 60000);
                 lastConnectionCheck = System.currentTimeMillis();
             }
 //            Log.i("Shutting down...");

@@ -1,21 +1,23 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"> <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
 
     <PreferenceCategory app:title="@string/preference_connection_header">
 
         <EditTextPreference
             app:key="ips"
-            app:title="@string/ips"
-            app:useSimpleSummaryProvider="true" />
+            app:title="@string/settings_ips"
+            app:useSimpleSummaryProvider="true"/>
 
         <EditTextPreference
             app:key="port"
-            app:title="@string/UDP_port"
-            app:useSimpleSummaryProvider="true" />
+            app:title="@string/settings_UDP_port"
+            app:useSimpleSummaryProvider="true"/>
 
         <EditTextPreference
             app:key="timeout"
             app:title="@string/settings_timeout"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true"
+            app:summary="@string/settings_timeout_summary"/>
 
        <!-- <ListPreference
             app:defaultValue="reply"
@@ -27,18 +29,20 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sync_header">
+    <PreferenceCategory app:title="@string/preference_debug_header">
 
         <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
+            app:key="enableDebug"
+            app:title="@string/settings_enable_debug"
+            app:useSimpleSummaryProvider="true"
+            app:summary="@string/settings_enable_debug_summary" />
 
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
+        <EditTextPreference
+            app:key="debugPort"
+            app:title="@string/settings_debug_port"
+            app:useSimpleSummaryProvider="true"
+            app:summary="@string/settings_debug_port_summary"
+            app:dependency="enableDebug"/>
 
     </PreferenceCategory>
 

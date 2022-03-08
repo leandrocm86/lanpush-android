@@ -13,17 +13,17 @@
 
     <!-- Preference Titles -->
     <string name="preference_connection_header">Connection</string>
+    <string name="preference_debug_header">Debug</string>
     <string name="sync_header">Sync</string>
 
     <!-- Connection Preferences -->
-    <string name="ips">IPs (for sending)</string>
-    <string name="UDP_port">UDP Port (for sending and receiving)</string>
+    <string name="settings_ips">IPs (for sending)</string>
+    <string name="settings_UDP_port">UDP Port (for sending and receiving)</string>
     <string name="settings_timeout">Reconnection period</string>
+    <string name="settings_timeout_summary">Time (in ms) to wait for a message</string>
+    <string name="settings_enable_debug">Enable debug</string>
+    <string name="settings_enable_debug_summary">Enable debug for more logs</string>
+    <string name="settings_debug_port">UDP Debug Port</string>
+    <string name="settings_debug_port_summary">Port for sending debug messages</string>
 
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>

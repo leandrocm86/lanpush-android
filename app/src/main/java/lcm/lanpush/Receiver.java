@@ -5,6 +5,7 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
+import lcm.lanpush.notification.Notificador;
 import lcm.lanpush.preferences.TimeoutPreference;
 
 public class Receiver {
@@ -23,7 +24,7 @@ public class Receiver {
 
     private Receiver() {
         Log.i("Creating Receiver...");
-        setTimeout(Integer.parseInt(TimeoutPreference.inst.getValue()));
+        setTimeout(TimeoutPreference.inst.getValue());
     }
 
     public boolean isRunning() {

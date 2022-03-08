@@ -1,4 +1,4 @@
-package lcm.lanpush;
+package lcm.lanpush.notification;
 
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -6,6 +6,9 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+
+import lcm.lanpush.LanpushApp;
+import lcm.lanpush.Log;
 
 
 public class ClipboardAction extends BroadcastReceiver {

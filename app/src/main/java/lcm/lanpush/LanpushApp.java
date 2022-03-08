@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import lcm.lanpush.alarms.CheckAlarm;
 import lcm.lanpush.alarms.PeriodicCheckAlarm;
+import lcm.lanpush.preferences.EnableDebugPreference;
 import lcm.lanpush.preferences.PortPreference;
 import lcm.lanpush.utils.Data;
 import lcm.lanpush.workers.ListenningWorker;
@@ -40,6 +41,7 @@ public class LanpushApp extends Application {
         Log.i("---------- Creating LanpushApp ----------");
         super.onCreate();
         PortPreference.inst.load();
+        EnableDebugPreference.inst.load();
         restartWorker();
 
         PeriodicWorker.setPeriodicWorker();

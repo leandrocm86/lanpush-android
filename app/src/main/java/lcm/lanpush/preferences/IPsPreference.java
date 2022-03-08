@@ -2,7 +2,7 @@ package lcm.lanpush.preferences;
 
 import lcm.lanpush.Sender;
 
-public class IPsPreference extends LanpushPreference {
+public class IPsPreference extends StringPreference {
 
     public static final IPsPreference inst = new IPsPreference();
 

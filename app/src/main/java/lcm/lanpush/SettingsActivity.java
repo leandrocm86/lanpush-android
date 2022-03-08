@@ -3,22 +3,15 @@ package lcm.lanpush;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
-import androidx.annotation.NonNull;
-import androidx.preference.EditTextPreference;
-import android.text.InputType;
-import android.widget.EditText;
-
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import lcm.lanpush.preferences.DebugPortPreference;
+import lcm.lanpush.preferences.EnableDebugPreference;
 import lcm.lanpush.preferences.IPsPreference;
-import lcm.lanpush.preferences.LanpushPreference;
 import lcm.lanpush.preferences.PortPreference;
 import lcm.lanpush.preferences.TimeoutPreference;
 
 public class SettingsActivity extends PreferenceActivity {
-
-    private EditTextPreference timeoutPreference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,35 +36,14 @@ public class SettingsActivity extends PreferenceActivity {
             Log.i("onCreatePreferences");
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
-            loadPreference(IPsPreference.inst, InputType.TYPE_CLASS_TEXT);
-            loadPreference(PortPreference.inst, InputType.TYPE_CLASS_NUMBER);
-            loadPreference(TimeoutPreference.inst, InputType.TYPE_CLASS_NUMBER);
-        }
+            if (LanpushApp.getMainActivity() != null)
+                LanpushApp.getMainActivity().hideButton();
 
-        private void loadPreference(LanpushPreference preference, int type) {
-            EditTextPreference textPreference = (EditTextPreference) findPreference(preference.getName());
-            if (textPreference != null) {
-                if (LanpushApp.getMainActivity() != null)
-                    LanpushApp.getMainActivity().hideButton();
-                textPreference.setText(preference.getValue());
-                textPreference.setOnPreferenceChangeListener(new androidx.preference.Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference androidPreference, Object newValue) {
-                        Log.i(preference.getName() + " onPreferenceChange: " + newValue + (newValue.getClass().getName()));
-                        preference.changeValue(newValue.toString());
-                        return true;
-                    }
-                });
-                textPreference.setOnBindEditTextListener(new EditTextPreference.OnBindEditTextListener() {
-                    @Override
-                    public void onBindEditText(@NonNull EditText editText) {
-                        Log.i(preference.getName() + " onBindEditText " + editText.getText().toString());
-                        editText.setInputType(type);
-                    }
-                });
-            }
-            else
-                Log.e("Unable to show preference: " + preference.getName());
+            IPsPreference.inst.fillPreferenceField(findPreference(IPsPreference.inst.getName()));
+            PortPreference.inst.fillPreferenceField(findPreference(PortPreference.inst.getName()));
+            TimeoutPreference.inst.fillPreferenceField(findPreference(TimeoutPreference.inst.getName()));
+            EnableDebugPreference.inst.fillPreferenceField(findPreference(EnableDebugPreference.inst.getName()));
+            DebugPortPreference.inst.fillPreferenceField(findPreference(DebugPortPreference.inst.getName()));
         }
 
         @Override

@@ -44,7 +44,7 @@
 <!--            android:process=":your_service" >-->
 <!--        </service>-->
 
-        <receiver android:name=".ClipboardAction" android:exported="true"/>
+        <receiver android:name=".notification.ClipboardAction" android:exported="true"/>
        <!-- <receiver android:name=".BrowserAction" android:exported="true">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />

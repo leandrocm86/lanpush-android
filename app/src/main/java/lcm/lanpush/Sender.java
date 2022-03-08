@@ -9,9 +9,10 @@ import lcm.lanpush.preferences.IPsPreference;
 
 public class Sender {
     public static final String[] DEFAULT_HOSTS = {"192.168.0.255"};
+    public static final int DEFAULT_DEBUG_PORT = 1051;
+
     private String[] hosts = DEFAULT_HOSTS;
-    private String DEBUG_HOST = "192.168.0.66";
-    private static final int DEBUG_PORT = 1051;
+    private int debugPort = DEFAULT_DEBUG_PORT;
 
     private static Sender inst;
 
@@ -42,8 +43,8 @@ public class Sender {
                     dsocket.close();
                 }
                 catch (IOException e) {
-                    if (port == DEBUG_PORT)
-                        Log.log(e.getClass().getName() + ": " + e.getMessage(), "[SENDER-ERROR] ", false);
+                    if (port == debugPort)
+                        Log.log(e.getClass().getName() + ": " + e.getMessage(), "[DEBUG-ERROR] ");
                     else
                         Log.e("Error while sending message", e);
                 }
@@ -58,8 +59,10 @@ public class Sender {
                 send(message, host, LanpushApp.getPort());
         }
     }
+
     public void sendDebug(String message) {
-        send(message, DEBUG_HOST, DEBUG_PORT);
+        for (String host : hosts)
+            send(message, host, debugPort);
     }
 
     public void setHosts(String[] ips) {
@@ -68,5 +71,10 @@ public class Sender {
             hostsStr += ", " + ips[i];
         Log.i("Hosts set: " + hostsStr);
         hosts = ips;
+    }
+
+    public void setDebugPort(int debugPort) {
+        this.debugPort = debugPort;
+        Log.i("Debug port set: " + debugPort);
     }
 }

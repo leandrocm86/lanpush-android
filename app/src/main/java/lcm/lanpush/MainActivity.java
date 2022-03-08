@@ -20,8 +20,8 @@ import androidx.navigation.ui.NavigationUI;
 import lcm.lanpush.alarms.CheckAlarm;
 import lcm.lanpush.alarms.PeriodicCheckAlarm;
 import lcm.lanpush.databinding.ActivityMainBinding;
+import lcm.lanpush.notification.Notificador;
 import lcm.lanpush.workers.LanpushWorker;
-import lcm.lanpush.workers.PeriodicWorker;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
             LanpushWorker.cancel();
             CheckAlarm.inst.cancel();
             PeriodicCheckAlarm.inst.cancel();
+            Sender.inst().send("[stop]");
             finishAffinity();
             finishAndRemoveTask();
         }

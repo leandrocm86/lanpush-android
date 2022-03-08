@@ -9,6 +9,8 @@ import lcm.lanpush.utils.Data;
 public class Log {
     private static int id = 0;
 
+    private static boolean enableDebug = false;
+
     public static void i(String msg) {
         log(msg, "[I] ");
     }
@@ -25,10 +27,6 @@ public class Log {
         e(msg + ":\n" + resumeErro(t));
     }
 
-    private static void log(String msg, String header) {
-        log(msg, header, true);
-    }
-
     public static String getThreadId() {
         String threadId = "" + Thread.currentThread().getId();
         if (threadId.length() > 3)
@@ -36,8 +34,9 @@ public class Log {
         return threadId;
     }
 
-    public static void log(String msg, String header, boolean sendDebug) {
+    public static void log(String msg, String header) {
         String linha = "[" + getThreadId() + "] " + Data.agora() + ": " + header + msg;
+        android.util.Log.i("INFO", linha);
         TextView logView = (TextView) LanpushApp.getTextView();
         if (logView != null) {
             LanpushApp.getMainActivity().runOnUiThread(new Runnable() {
@@ -51,13 +50,13 @@ public class Log {
                        fila.clear();
                    }
                    else addMsg(linha + "\n");
-                   sendDebug(linha, sendDebug);
+                   sendDebug(linha);
                }
             });
         }
         else {
             addMsgFila(linha);
-            sendDebug(linha, sendDebug);
+            sendDebug(linha);
         }
     }
 
@@ -74,8 +73,8 @@ public class Log {
         logView.setText(logView.getText() + msg);
     }
 
-    private static void sendDebug(String msg, boolean ligado) {
-        if (ligado) {
+    private static void sendDebug(String msg) {
+        if (enableDebug && !msg.contains("[DEBUG-ERROR]")) {
             msg = "L" + ++id + msg + "\n";
             Sender.inst().sendDebug(msg);
         }
@@ -99,4 +98,9 @@ public class Log {
     }
 
     private static ArrayList<String> fila = new ArrayList<>();
+
+    public static void enableDebug(boolean enable) {
+        enableDebug = enable;
+        i("Debug enabled: " + enableDebug);
+    }
 }

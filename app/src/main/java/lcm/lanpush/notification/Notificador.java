@@ -1,4 +1,4 @@
-package lcm.lanpush;
+package lcm.lanpush.notification;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -11,6 +11,10 @@ import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
+import lcm.lanpush.LanpushApp;
+import lcm.lanpush.Log;
+import lcm.lanpush.R;
 
 public class Notificador {
     private static int notificationId = Math.round(System.currentTimeMillis() / 60000);

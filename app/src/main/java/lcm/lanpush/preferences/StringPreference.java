@@ -19,7 +19,7 @@ public abstract class StringPreference extends LanpushPreference<String> {
         EditTextPreference inputText = (EditTextPreference) androidPreference;
 //        inputText.setText(super.getValue());
         inputText.setOnPreferenceChangeListener(super.buildChangeListener());
-        inputText.setOnBindEditTextListener(super.buildBindListener(InputType.TYPE_CLASS_TEXT));
+        inputText.setOnBindEditTextListener(buildBindListener(InputType.TYPE_CLASS_TEXT));
     }
 
     @Override

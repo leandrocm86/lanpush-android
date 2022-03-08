@@ -2,13 +2,12 @@ package lcm.lanpush.preferences;
 
 import android.content.SharedPreferences;
 import android.text.InputType;
-import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 
 import lcm.lanpush.Log;
+import lcm.lanpush.notification.Notificador;
 
 public abstract class IntPreference extends LanpushPreference<Integer> {
 
@@ -41,8 +40,14 @@ public abstract class IntPreference extends LanpushPreference<Integer> {
             @Override
             public boolean onPreferenceChange(Preference androidPreference, Object newValue) {
                 Log.i(getName() + " onPreferenceChange (int): " + newValue + (newValue.getClass().getName()));
-                changeValue(Integer.parseInt(newValue.toString()));
-                return true;
+                try {
+                    return changeValue(Integer.parseInt(newValue.toString()));
+                }
+                catch (NumberFormatException e) {
+                    Log.e("Attempt to set invalid value for integer preference: " + newValue.toString());
+                    Notificador.inst.showToast("Invalid value! Must be an integer.");
+                    return false;
+                }
             }
         };
     }

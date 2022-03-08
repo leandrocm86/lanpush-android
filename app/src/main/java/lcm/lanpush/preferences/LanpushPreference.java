@@ -26,9 +26,13 @@ public abstract class LanpushPreference<T> {
         apply(getValue());
     }
 
-    public void changeValue(T value) {
-        saveValue(value);
-        apply(value);
+    public boolean changeValue(T value) {
+        if (validate(value)) {
+            saveValue(value);
+            apply(value);
+            return true;
+        }
+        return false;
     }
 
     public T getValue() {
@@ -78,6 +82,7 @@ public abstract class LanpushPreference<T> {
     public String getName() {
         return name;
     }
+    protected boolean validate(T value) {return true;}
 
     public abstract void fillPreferenceField(Preference androidPreference);
     protected abstract T getValueFromPreference(SharedPreferences preferences);

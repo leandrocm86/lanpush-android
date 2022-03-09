@@ -15,9 +15,9 @@ public abstract class StringPreference extends LanpushPreference<String> {
     protected StringPreference(String name, String defaultValue) {super(name, defaultValue);}
 
     @Override
-    public void fillPreferenceField(Preference androidPreference) {
+    public void prepareEditField(Preference androidPreference) {
         EditTextPreference inputText = (EditTextPreference) androidPreference;
-//        inputText.setText(super.getValue());
+        inputText.setDialogTitle("title");
         inputText.setOnPreferenceChangeListener(super.buildChangeListener());
         inputText.setOnBindEditTextListener(buildBindListener(InputType.TYPE_CLASS_TEXT));
     }

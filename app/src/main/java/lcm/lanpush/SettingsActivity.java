@@ -39,11 +39,11 @@ public class SettingsActivity extends PreferenceActivity {
             if (LanpushApp.getMainActivity() != null)
                 LanpushApp.getMainActivity().hideButton();
 
-            IPsPreference.inst.fillPreferenceField(findPreference(IPsPreference.inst.getName()));
-            PortPreference.inst.fillPreferenceField(findPreference(PortPreference.inst.getName()));
-            TimeoutPreference.inst.fillPreferenceField(findPreference(TimeoutPreference.inst.getName()));
-            EnableDebugPreference.inst.fillPreferenceField(findPreference(EnableDebugPreference.inst.getName()));
-            DebugPortPreference.inst.fillPreferenceField(findPreference(DebugPortPreference.inst.getName()));
+            IPsPreference.inst.prepareEditField(findPreference(IPsPreference.inst.getName()));
+            PortPreference.inst.prepareEditField(findPreference(PortPreference.inst.getName()));
+            TimeoutPreference.inst.prepareEditField(findPreference(TimeoutPreference.inst.getName()));
+            EnableDebugPreference.inst.prepareEditField(findPreference(EnableDebugPreference.inst.getName()));
+            DebugPortPreference.inst.prepareEditField(findPreference(DebugPortPreference.inst.getName()));
         }
 
         @Override

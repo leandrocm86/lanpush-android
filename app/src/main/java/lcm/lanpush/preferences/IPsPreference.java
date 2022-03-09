@@ -6,6 +6,7 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.preference.EditTextPreference;
+import androidx.preference.Preference;
 
 import java.util.regex.Pattern;
 
@@ -48,5 +49,11 @@ public class IPsPreference extends StringPreference {
                 editText.setKeyListener(DigitsKeyListener.getInstance("0123456789.,"));
             }
         };
+    }
+
+    @Override
+    public void prepareEditField(Preference androidPreference) {
+        super.prepareEditField(androidPreference);
+        ((EditTextPreference) androidPreference).setDialogTitle("IPs (if multiple, separate with comma).");
     }
 }

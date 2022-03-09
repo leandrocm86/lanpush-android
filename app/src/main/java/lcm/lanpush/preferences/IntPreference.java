@@ -14,9 +14,8 @@ public abstract class IntPreference extends LanpushPreference<Integer> {
     protected IntPreference(String name, Integer defaultValue) {super(name, defaultValue);}
 
     @Override
-    public void fillPreferenceField(Preference androidPreference) {
+    public void prepareEditField(Preference androidPreference) {
         EditTextPreference inputText = (EditTextPreference) androidPreference;
-//        inputText.setText(super.getValue() + "");
         inputText.setOnPreferenceChangeListener(this.buildChangeListener());
         inputText.setOnBindEditTextListener(super.buildBindListener(InputType.TYPE_CLASS_NUMBER));
     }

@@ -84,7 +84,7 @@ public abstract class LanpushPreference<T> {
     }
     protected boolean validate(T value) {return true;}
 
-    public abstract void fillPreferenceField(Preference androidPreference);
+    public abstract void prepareEditField(Preference androidPreference);
     protected abstract T getValueFromPreference(SharedPreferences preferences);
     protected abstract void persistValueInPreference(SharedPreferences.Editor editor, T value);
 }

@@ -37,14 +37,14 @@ public class LanpushWorker extends Worker {
                 if (!Receiver.inst.isRunning()) {
                     listen();
                 } else if (execucaoDemorada()) {
-                    Log.i("Client diz que está rodando, mas já era pra ter dado timeout. Enviando auto-mensagem...");
+                    Log.d("Client diz que está rodando, mas já era pra ter dado timeout. Enviando auto-mensagem...");
                     Sender.inst().send("[auto]");
                     Thread.sleep(1000);
                     if (!Receiver.inst.isRunning()) {
-                        Log.i("Client parece ter parado. Religando...");
+                        Log.d("Client parece ter parado. Religando...");
                         listen();
                     } else if (execucaoDemorada()) {
-                        Log.i("Auto-mensagem não surtiu efeito. Fechando a conexão e reiniciando...");
+                        Log.d("Auto-mensagem não surtiu efeito. Fechando a conexão e reiniciando...");
                         Receiver.inst.fecharConexao();
                         listen();
                     }

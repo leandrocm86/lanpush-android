@@ -4,14 +4,19 @@ import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.view.KeyEvent;
-import android.view.View;
-
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -23,12 +28,6 @@ import lcm.lanpush.databinding.ActivityMainBinding;
 import lcm.lanpush.notification.Notificador;
 import lcm.lanpush.workers.LanpushWorker;
 
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
-
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
@@ -37,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
-            Log.i("Creating MainActivity");
+            Log.d("Creating MainActivity");
             super.onCreate(savedInstanceState);
             LanpushApp.saveMainActivity(this);
 
@@ -68,7 +67,11 @@ public class MainActivity extends AppCompatActivity {
                         getInputManager().hideSoftInputFromWindow(binding.input.getWindowToken(), 0);
                         showButton();
                         binding.input.setVisibility(View.GONE);
-                        Sender.inst().send(binding.input.getText().toString());
+                        String textToSend = binding.input.getText().toString();
+                        if (!textToSend.isEmpty()) {
+                            Log.i("Sending text: " + textToSend);
+                            Sender.inst().send(textToSend);
+                        }
                         Notificador.inst.showToast("Sent!");
                         binding.input.setText("");
                         return true;
@@ -115,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_reconnection) {
             try {
-                Log.i("Reconectando...");
+                Log.d("Reconectando...");
                 Notificador.inst.showToast("Reconectando...");
                 LanpushApp.restartWorker();
             } catch (Throwable t) {
@@ -133,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setMessage(R.string.about)
                     .setPositiveButton(R.string.about_git, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            // FIRE ZE MISSILES!
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/leandrocm86/lanpush-android")));
                         }
                     })
                     .setNegativeButton(R.string.about_close, new DialogInterface.OnClickListener() {
@@ -146,11 +149,7 @@ public class MainActivity extends AppCompatActivity {
             builder.create().show();
         }
         else if (id == R.id.action_close) {
-            Log.i("Closing the application...");
-            LanpushWorker.cancel();
-            CheckAlarm.inst.cancel();
-            PeriodicCheckAlarm.inst.cancel();
-            Sender.inst().send("[stop]");
+            LanpushApp.close();
             finishAffinity();
             finishAndRemoveTask();
         }
@@ -167,32 +166,33 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Log.i("Destroying MainActivity");
+        Log.d("Destroying MainActivity");
         super.onDestroy();
 //        CDI.clear();
     }
 
     @Override
     protected void onStop() {
-        Log.i("Stopping MainActivity");
+        Log.d("Stopping MainActivity");
+        Log.saveMessages();
         super.onStop();
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        Log.i("PostCreate MainActivity");
+        Log.d("PostCreate MainActivity");
         super.onPostCreate(savedInstanceState);
     }
 
     @Override
     protected void onPostResume() {
-        Log.i("PostResume MainActivity");
+        Log.d("PostResume MainActivity");
         super.onPostResume();
     }
 
     @Override
     protected void onStart() {
-        Log.i("Start MainActivity");
+        Log.d("Start MainActivity");
         super.onStart();
     }
 }

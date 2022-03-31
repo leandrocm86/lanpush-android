@@ -23,7 +23,7 @@ public class Receiver {
     public static final Receiver inst = new Receiver();
 
     private Receiver() {
-        Log.i("Creating Receiver...");
+        Log.d("Creating Receiver...");
         setTimeout(TimeoutPreference.inst.getValue());
     }
 
@@ -35,6 +35,7 @@ public class Receiver {
     public boolean run() {
         if (erros == 3) {
             Notificador.inst.showNotification("Since there were 3 errors, the app is getting closed.");
+            LanpushApp.close();
             System.exit(1);
         }
         return listen();
@@ -42,7 +43,7 @@ public class Receiver {
 
     private synchronized boolean listen() {
         if (running == true) {
-            Log.i("Tried to execute listenner that was already running. Aborting...");
+            Log.d("Tried to execute listenner that was already running. Aborting...");
             return false;
         }
         running = true;
@@ -51,7 +52,7 @@ public class Receiver {
             DatagramPacket packet = reconectar();
             udpSocket.setSoTimeout(timeout);
             ultimaConexao = System.currentTimeMillis();
-            Log.i("Listener reconnecting. About to wait on UDP (" + erros + " errors, timeout " + timeout + ", thread " + atualizaThread() + ")");
+            Log.d("Listener reconnecting. About to wait on UDP (" + erros + " errors, timeout " + timeout + ", thread " + atualizaThread() + ")");
             udpSocket.receive(packet);
             String text = new String(packet.getData(), 0, packet.getLength()).trim();
             Log.i("Received: " + text);
@@ -63,7 +64,7 @@ public class Receiver {
             }
             return !text.contains("[stop]");
         } catch (SocketTimeoutException e) {
-            Log.i("Listener timeout!");
+            Log.d("Listener timeout!");
         } catch (Throwable t) {
             erros++;
             Log.e("Error while listenning!", t);
@@ -87,7 +88,7 @@ public class Receiver {
 
     private synchronized DatagramPacket reconectar() throws SocketException {
         if (udpSocket != null && !udpSocket.isClosed()) {
-            Log.i("Socket was already active while trying to reconnect. Closing it...");
+            Log.d("Socket was already active while trying to reconnect. Closing it...");
             fecharConexao();
         }
         udpSocket = new DatagramSocket(LanpushApp.getPort());
@@ -99,7 +100,7 @@ public class Receiver {
         if (udpSocket != null) {
             try {
                 if (udpSocket.isClosed())
-                    Log.i("Connection was already closed.");
+                    Log.d("Connection was already closed.");
                 else {
 //                    Log.i("Closing connection...");
                     udpSocket.disconnect();
@@ -112,13 +113,13 @@ public class Receiver {
                 Log.e("Error while trying to close connection", t);
             }
         } else {
-            Log.i("Null connection. Doesn't need to be closed.");
+            Log.d("Null connection. Doesn't need to be closed.");
         }
     }
 
     public void setTimeout(int timeout) {
         this.timeout = timeout;
-        Log.i("Timeout set: " + timeout);
+        Log.d("Timeout set: " + timeout);
     }
 
     public int getTimeout() {

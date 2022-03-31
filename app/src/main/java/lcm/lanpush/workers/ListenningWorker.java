@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.work.WorkerParameters;
 
 import lcm.lanpush.Log;
-import lcm.lanpush.workers.LanpushWorker;
 
 public class ListenningWorker extends LanpushWorker {
     private final Context context;
@@ -19,7 +18,7 @@ public class ListenningWorker extends LanpushWorker {
     @NonNull
     @Override
     public Result doWork() {
-        Log.i("Starting worker...");
+        Log.d("Starting worker...");
         return super.doWork();
     }
 }

@@ -1,15 +1,26 @@
 package lcm.lanpush;
 
+import android.content.SharedPreferences;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import androidx.preference.PreferenceManager;
 
+import java.util.LinkedList;
+
+import lcm.lanpush.preferences.LogLimitPreference;
 import lcm.lanpush.utils.Data;
 
 public class Log {
     private static int id = 0;
+    private static LinkedList<String> messages = new LinkedList<>();
+    private static int messageLimit = LogLimitPreference.inst.getValue();
 
     private static boolean enableDebug = false;
+
+    public static void d(String msg) {
+        if (enableDebug)
+            log(msg, "[D] ");
+    }
 
     public static void i(String msg) {
         log(msg, "[I] ");
@@ -37,40 +48,36 @@ public class Log {
     public static void log(String msg, String header) {
         String linha = "[" + getThreadId() + "] " + Data.agora() + ": " + header + msg;
         android.util.Log.i("INFO", linha);
+        sendDebug(linha);
+        messages.add(linha);
         TextView logView = (TextView) LanpushApp.getTextView();
         if (logView != null) {
             LanpushApp.getMainActivity().runOnUiThread(new Runnable() {
                @Override
                public void run() {
-                   if (!fila.isEmpty()) {
-                       String mensagensEnfileiradas = "";
-                       for (String mensagem : fila)
-                           mensagensEnfileiradas += "[ENFILEIRADA]" + mensagem + "\n";
-                       addMsg(mensagensEnfileiradas + linha + "\n");
-                       fila.clear();
+                   if (logView.getText().length() == 0) {
+                       fillMessages(logView);
                    }
-                   else addMsg(linha + "\n");
-                   sendDebug(linha);
+                   else logView.setText(logView.getText() + linha + "\n");
                }
             });
         }
-        else {
-            addMsgFila(linha);
-            sendDebug(linha);
-        }
     }
 
-    private static void addMsgFila(String linha) {
-        if (fila.size() == 15) {
-            fila.clear();
-            fila.add("FILA COM MENSAGENS ANTIGAS FOI LIMPA");
-        }
-        fila.add(linha);
+    public static void fillMessages(TextView logView) {
+        String output = "";
+        for (String msg : messages)
+            output += msg + "\n";
+        logView.setText(output);
     }
 
     private static void addMsg(String msg) {
-        TextView logView = LanpushApp.getTextView();
-        logView.setText(logView.getText() + msg);
+        if (messages.size() >= messageLimit) {
+            messages.removeFirst();
+        }
+        messages.add(msg);
+//        TextView logView = LanpushApp.getTextView();
+//        logView.setText(logView.getText() + msg);
     }
 
     private static void sendDebug(String msg) {
@@ -97,10 +104,32 @@ public class Log {
         return str;
     }
 
-    private static ArrayList<String> fila = new ArrayList<>();
+    public static void saveMessages() {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()).edit();
+        StringBuilder log = new StringBuilder("");
+        messages.forEach(msg -> log.append(msg + '\n'));
+        editor.putString("lanpush-logs", log.toString());
+        editor.commit();
+        d("Log saved.");
+    }
+
+    public static void loadMessages() {
+        LinkedList<String> restoredMessages = new LinkedList<>();
+        String savedLog = PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()).getString("lanpush-logs", "");
+        for (String msg : savedLog.split("\n")) {
+            restoredMessages.add(msg);
+        }
+        messages.addAll(0, restoredMessages);
+        d("Restored " + messages.size() + " log messages.");
+    }
 
     public static void enableDebug(boolean enable) {
         enableDebug = enable;
-        i("Debug enabled: " + enableDebug);
+        d("Debug enabled: " + enableDebug);
+    }
+
+    public static void setMessageLimit(int limit) {
+        messageLimit = limit;
+        Log.d("Message limit set: " + messageLimit);
     }
 }

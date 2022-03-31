@@ -28,7 +28,7 @@ public class BrowserAction extends BroadcastReceiver {
             Intent browserAction = new Intent(Intent.ACTION_VIEW, uri);
             browserAction.setData(uri);
             browserAction.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Log.i("Calling browser for " + uri.toString());
+            Log.d("Calling browser for " + uri.toString());
             context.startActivity(browserAction);
             Notificador.inst.cancelNotification(notificationId);
         }

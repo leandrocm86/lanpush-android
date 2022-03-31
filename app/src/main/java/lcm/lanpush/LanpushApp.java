@@ -9,9 +9,7 @@ import android.content.SharedPreferences;
 import android.widget.TextView;
 
 import androidx.preference.PreferenceManager;
-import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import java.lang.ref.WeakReference;
@@ -22,6 +20,7 @@ import lcm.lanpush.alarms.PeriodicCheckAlarm;
 import lcm.lanpush.preferences.EnableDebugPreference;
 import lcm.lanpush.preferences.PortPreference;
 import lcm.lanpush.utils.Data;
+import lcm.lanpush.workers.LanpushWorker;
 import lcm.lanpush.workers.ListenningWorker;
 import lcm.lanpush.workers.PeriodicWorker;
 
@@ -38,10 +37,11 @@ public class LanpushApp extends Application {
     @Override
     public void onCreate() {
         context = new WeakReference<>(getApplicationContext());
-        Log.i("---------- Creating LanpushApp ----------");
+        EnableDebugPreference.inst.load();
+        Log.i("---------- Starting LanpushApp ----------");
+        Log.loadMessages();
         super.onCreate();
         PortPreference.inst.load();
-        EnableDebugPreference.inst.load();
         restartWorker();
 
         PeriodicWorker.setPeriodicWorker();
@@ -65,27 +65,28 @@ public class LanpushApp extends Application {
 
     @Override
     public void onTerminate() {
-        Log.i("Terminating LanpushApp...");
+        Log.d("Terminating LanpushApp...");
         context.clear();
         super.onTerminate();
     }
 
     @Override
     public void onLowMemory() {
-        Log.i("OnLowMemory");
+        Log.d("OnLowMemory");
         super.onLowMemory();
     }
 
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
-        Log.i("OnTrimMemory: Level " + level + " - " + descriptionForMemoryLevel(level));
+        Log.d("OnTrimMemory: Level " + level + " - " + descriptionForMemoryLevel(level));
         if (level >= 40) {
             if (System.currentTimeMillis() - lastConnectionCheck > 60000) {
                 ActivityManager.MemoryInfo memoryInfo = getMemoryInfo();
-                Log.i("LowMemory: " + memoryInfo.lowMemory + ", used " + (Math.round(100-memoryInfo.availMem*100/memoryInfo.totalMem)) + "%");
+                Log.d("LowMemory: " + memoryInfo.lowMemory + ", used " + (Math.round(100-memoryInfo.availMem*100/memoryInfo.totalMem)) + "%");
                 if (!Data.madrugada())
                     CheckAlarm.inst.setAlarm(System.currentTimeMillis() + 60000);
+                Log.saveMessages();
                 lastConnectionCheck = System.currentTimeMillis();
             }
 //            Log.i("Shutting down...");
@@ -122,26 +123,20 @@ public class LanpushApp extends Application {
     }
 
     public static void restartWorker() {
-        Log.i("Restarting worker...");
+        Log.d("Restarting worker...");
         OneTimeWorkRequest mywork = new OneTimeWorkRequest.Builder(ListenningWorker.class)
                 .setInitialDelay(1, TimeUnit.SECONDS)
                 .build();
         WorkManager.getInstance(getContext()).enqueue(mywork);
-//        Intent serviceIntent = new Intent();
-//        JobIntentService.enqueueWork(getContext(), ListenningService.class, RSS_JOB_ID, serviceIntent);
-//        if (isServiceRunning(ListenningService.class))
-//            Log.i("Servico ja estava em execucao! Ignorando ordem...");
     }
 
-//    private static boolean isServiceRunning(Class<?> serviceClass) {
-//        ActivityManager manager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
-//        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-//            if (serviceClass.getName().equals(service.service.getClassName())) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    public static void close() {
+        Log.i("Closing the application...");
+        LanpushWorker.cancel();
+        CheckAlarm.inst.cancel();
+        PeriodicCheckAlarm.inst.cancel();
+        Sender.inst().send("[stop]");
+    }
 
     public static Context getContext() {
         return context.get();
@@ -173,7 +168,7 @@ public class LanpushApp extends Application {
 
     public static void setPort(int port) {
         port = port;
-        Log.i("Port set: " + port);
+        Log.d("Port set: " + port);
     }
 
     public static int getPort() {

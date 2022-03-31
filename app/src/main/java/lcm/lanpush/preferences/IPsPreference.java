@@ -44,7 +44,7 @@ public class IPsPreference extends StringPreference {
         return new EditTextPreference.OnBindEditTextListener() {
             @Override
             public void onBindEditText(@NonNull EditText editText) {
-                Log.i(getName() + " onBindEditText for IPs " + editText.getText().toString());
+                Log.d(getName() + " onBindEditText for IPs " + editText.getText().toString());
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER);
                 editText.setKeyListener(DigitsKeyListener.getInstance("0123456789.,"));
             }

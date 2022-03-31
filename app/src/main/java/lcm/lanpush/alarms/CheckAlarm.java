@@ -20,7 +20,7 @@ public class CheckAlarm extends Alarm {
     public void onReceive(Context context, Intent intent) {
         boolean running = Receiver.inst.isRunning();
         String diagnostic = running ? "Connection seems OK" : "Connection stopped. Restarting...";
-        Log.i("Check Alarm being triggered... " + diagnostic);
+        Log.d("Check Alarm being triggered... " + diagnostic);
         if (!running)
             LanpushApp.restartWorker();
 //        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -35,10 +35,10 @@ public class CheckAlarm extends Alarm {
     public void setAlarm(long triggerAtMillis) {
         AlarmManager alarmMgr = super.getAlarmManager();
         if (Build.VERSION.SDK_INT < 31 || alarmMgr.canScheduleExactAlarms()) {
-            Log.i("Configuring wake up in " + Data.formataTempo(triggerAtMillis - System.currentTimeMillis()));
+            Log.d("Configuring wake up in " + Data.formataTempo(triggerAtMillis - System.currentTimeMillis()));
             alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, getPendingIntent());
         } else {
-            Log.i("There's no permission to set alarms. The application may be killed and don't restart.");
+            Log.d("There's no permission to set alarms. The application may be killed and don't restart.");
         }
     }
 

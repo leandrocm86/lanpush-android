@@ -27,6 +27,7 @@ public class FirstFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d("Loading messages...");
 
 //        binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -37,6 +38,7 @@ public class FirstFragment extends Fragment {
 //        });
 
         LanpushApp.saveTextView(binding.logview);
+        Log.fillMessages(binding.logview);
     }
 
     @Override

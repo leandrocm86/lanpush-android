@@ -23,7 +23,7 @@ public class ClipboardAction extends BroadcastReceiver {
             clipboard.setPrimaryClip(clip);
             Notificador.inst.showToast("Copiado: " + (mensagem.length() < 20 ? mensagem : mensagem.substring(0, 40) + "..."));
 //            NotificationManagerCompat.from(context.getApplicationContext()).cancelAll();
-            Log.i("Cancelando notificacoes " + notificationId);
+            Log.d("Cancelando notificacoes " + notificationId);
             Notificador.inst.cancelNotification(notificationId);
 //            collpasePanel(context);
         }

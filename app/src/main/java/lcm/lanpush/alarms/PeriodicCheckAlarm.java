@@ -18,12 +18,12 @@ public class PeriodicCheckAlarm extends Alarm {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Data.madrugada()) {
-            Log.i("Periodic Alarm is resting.");
+            Log.d("Periodic Alarm is resting.");
             return;
         }
         boolean running = Receiver.inst.isRunning();
         String diagnostic = running ? "Connection seems OK" : "Connection stopped. Restarting...";
-        Log.i("Periodic Alarm being triggered... " + diagnostic);
+        Log.d("Periodic Alarm being triggered... " + diagnostic);
         if (!running)
             LanpushApp.restartWorker();
 //        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -36,7 +36,7 @@ public class PeriodicCheckAlarm extends Alarm {
     }
 
     public void setPeriodicAlarm() {
-        Log.i("Setting periodic Alarm...");
+        Log.d("Setting periodic Alarm...");
         getAlarmManager().setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES,
                 AlarmManager.INTERVAL_FIFTEEN_MINUTES, getPendingIntent());

@@ -20,7 +20,7 @@ public class Sender {
         if (inst == null) {
             inst = new Sender();
             IPsPreference.inst.load();
-            Log.i("Sender created.");
+            Log.d("Sender created.");
         }
         return inst;
     }
@@ -69,12 +69,12 @@ public class Sender {
         String hostsStr = ips[0];
         for (int i = 1; i < ips.length; i++)
             hostsStr += ", " + ips[i];
-        Log.i("Hosts set: " + hostsStr);
+        Log.d("Hosts set: " + hostsStr);
         hosts = ips;
     }
 
     public void setDebugPort(int debugPort) {
         this.debugPort = debugPort;
-        Log.i("Debug port set: " + debugPort);
+        Log.d("Debug port set: " + debugPort);
     }
 }

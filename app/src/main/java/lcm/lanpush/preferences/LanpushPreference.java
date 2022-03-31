@@ -28,6 +28,7 @@ public abstract class LanpushPreference<T> {
 
     public boolean changeValue(T value) {
         if (validate(value)) {
+            Log.i("Changing " + name + ": " + value);
             saveValue(value);
             apply(value);
             return true;
@@ -44,7 +45,7 @@ public abstract class LanpushPreference<T> {
             PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()).edit().clear().commit();
         }
         if (value == null) {
-            Log.e("Preference not found, using default value for " + name);
+            Log.i("Preference not found, using default value for " + name);
             saveValue(defaultValue);
             Log.i("Saved default value " + defaultValue);
             value = defaultValue;
@@ -62,7 +63,7 @@ public abstract class LanpushPreference<T> {
         return new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference androidPreference, Object newValue) {
-                Log.i(name + " onPreferenceChange: " + newValue + (newValue.getClass().getName()));
+                Log.d(name + " onPreferenceChange: " + newValue + (newValue.getClass().getName()));
                 changeValue((T) newValue);
                 return true;
             }
@@ -73,7 +74,7 @@ public abstract class LanpushPreference<T> {
         return new EditTextPreference.OnBindEditTextListener() {
             @Override
             public void onBindEditText(@NonNull EditText editText) {
-                Log.i(getName() + " onBindEditText " + editText.getText().toString());
+                Log.d(getName() + " onBindEditText " + editText.getText().toString());
                 editText.setInputType(inputType);
             }
         };

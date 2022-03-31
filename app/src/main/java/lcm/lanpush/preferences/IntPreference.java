@@ -38,7 +38,7 @@ public abstract class IntPreference extends LanpushPreference<Integer> {
         return new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference androidPreference, Object newValue) {
-                Log.i(getName() + " onPreferenceChange (int): " + newValue + (newValue.getClass().getName()));
+                Log.d(getName() + " onPreferenceChange (int): " + newValue + (newValue.getClass().getName()));
                 try {
                     return changeValue(Integer.parseInt(newValue.toString()));
                 }

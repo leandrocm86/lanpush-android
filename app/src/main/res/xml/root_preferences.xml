@@ -29,6 +29,14 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/preference_ui_header">
+        <EditTextPreference
+            app:key="logLimit"
+            app:title="@string/settings_log_limit"
+            app:useSimpleSummaryProvider="true"
+            app:summary="@string/settings_log_limit_summary"/>
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/preference_debug_header">
 
         <SwitchPreferenceCompat

@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 import lcm.lanpush.LanpushApp;
 import lcm.lanpush.Log;
-import lcm.lanpush.workers.LanpushWorker;
 
 public class PeriodicWorker extends LanpushWorker {
     private final Context context;
@@ -25,7 +24,7 @@ public class PeriodicWorker extends LanpushWorker {
     @NonNull
     @Override
     public Result doWork() {
-        Log.i("Starting periodic worker...");
+        Log.d("Starting periodic worker...");
         return super.doWork();
     }
 

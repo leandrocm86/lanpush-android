@@ -11,18 +11,18 @@ public class SelectionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("Criando SelectionActivity");
+        Log.d("Creating SelectionActivity");
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_selection);
-        trataSelecao();
+        handleSelectedText();
         finish();
     }
 
-    private void trataSelecao() {
-        Log.i("Tratando selecao...");
+    private void handleSelectedText() {
+        Log.d("Handling text selection...");
         try {
             CharSequence text = getIntent().getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT);
-            Log.i("Selecionado: " + text);
+            Log.i("Selected text to send: " + text);
             if (text != null) {
                 String msg = text.toString().trim();
                 if (!msg.isEmpty()) {

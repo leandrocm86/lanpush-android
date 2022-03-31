@@ -38,7 +38,7 @@ public class Notificador {
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             notificationManager.createNotificationChannel(channel);
-            Log.i("Created notification channel");
+            Log.d("Created notification channel");
         }
     }
 
@@ -51,7 +51,7 @@ public class Notificador {
     }
 
     public void showNotification(String msg) {
-        Log.i("Preparing to show notification '" + msg + "'");
+        Log.d("Preparing to show notification '" + msg + "'");
 
         // Intent que traz a aplicação para primeiro plano.
 //        Intent notificationIntent = new Intent(context, MainActivity.class);
@@ -90,7 +90,6 @@ public class Notificador {
         browserAction.setData(uri);
         browserAction.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        Log.i("Calling browser for " + uri.toString());
         return PendingIntent.getActivity(context, notificationId+2, browserAction, PendingIntent.FLAG_IMMUTABLE);
 //        Intent browserIntent = new Intent(context, BrowserAction.class);
 //        browserIntent.putExtra("mensagem", mensagem);
@@ -99,7 +98,7 @@ public class Notificador {
     }
 
     public void showToast(String msg) {
-        Log.i("[TOAST] " + msg);
+        Log.d("[TOAST] " + msg);
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 

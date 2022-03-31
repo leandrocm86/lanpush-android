@@ -25,13 +25,14 @@
 
     <EditText
         android:id="@+id/input"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
-        android:visibility = "gone"
+        android:background="@android:color/system_neutral1_100"
         android:imeOptions="actionDone"
         android:inputType="text"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:visibility="gone" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

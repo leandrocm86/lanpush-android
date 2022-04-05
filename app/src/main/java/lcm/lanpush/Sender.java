@@ -5,14 +5,14 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import lcm.lanpush.preferences.DebugHostPreference;
+import lcm.lanpush.preferences.DebugPortPreference;
 import lcm.lanpush.preferences.IPsPreference;
 
 public class Sender {
-    public static final String[] DEFAULT_HOSTS = {"192.168.0.255"};
-    public static final int DEFAULT_DEBUG_PORT = 1051;
-
-    private String[] hosts = DEFAULT_HOSTS;
-    private int debugPort = DEFAULT_DEBUG_PORT;
+    private String[] hosts = {IPsPreference.inst.getDefaultValue()};
+    private String debugHost = DebugHostPreference.inst.getDefaultValue();
+    private int debugPort = DebugPortPreference.inst.getDefaultValue();
 
     private static Sender inst;
 
@@ -76,5 +76,10 @@ public class Sender {
     public void setDebugPort(int debugPort) {
         this.debugPort = debugPort;
         Log.d("Debug port set: " + debugPort);
+    }
+
+    public void setDebugHost(String debugHost) {
+        this.debugHost = debugHost;
+        Log.d("Debug host set: " + debugHost);
     }
 }

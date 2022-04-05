@@ -46,6 +46,13 @@
             app:summary="@string/settings_enable_debug_summary" />
 
         <EditTextPreference
+            app:key="debugIP"
+            app:title="@string/settings_debug_ip"
+            app:useSimpleSummaryProvider="true"
+            app:summary="@string/settings_debug_ip_summary"
+            app:dependency="enableDebug"/>
+
+        <EditTextPreference
             app:key="debugPort"
             app:title="@string/settings_debug_port"
             app:useSimpleSummaryProvider="true"

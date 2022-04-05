@@ -14,17 +14,17 @@ import lcm.lanpush.Log;
 import lcm.lanpush.Sender;
 import lcm.lanpush.notification.Notificador;
 
-public class IPsPreference extends StringPreference {
+public class DebugHostPreference extends StringPreference {
 
-    public static final IPsPreference inst = new IPsPreference();
+    public static final DebugHostPreference inst = new DebugHostPreference();
 
-    private IPsPreference() {
-        super("ips", "192.168.0.255");
+    private DebugHostPreference() {
+        super("debugIP", "192.168.0.255");
     }
 
     @Override
     public void apply(String value) {
-        Sender.inst().setHosts(value.trim().split(","));
+        Sender.inst().setDebugHost(value.trim());
     }
 
     @Override
@@ -34,7 +34,7 @@ public class IPsPreference extends StringPreference {
             return true;
         }
         else {
-            Notificador.inst.showToast("Invalid value! IPs must be numeric and (if more than one) separated by comma.");
+            Notificador.inst.showToast("Invalid value! IP must be numeric.");
             return false;
         }
     }
@@ -44,7 +44,7 @@ public class IPsPreference extends StringPreference {
         return new EditTextPreference.OnBindEditTextListener() {
             @Override
             public void onBindEditText(@NonNull EditText editText) {
-                Log.d(getName() + " onBindEditText for IPs " + editText.getText().toString());
+                Log.d(getName() + " onBindEditText for DEBUG IP " + editText.getText().toString());
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER);
                 editText.setKeyListener(DigitsKeyListener.getInstance("0123456789.,"));
             }
@@ -54,6 +54,6 @@ public class IPsPreference extends StringPreference {
     @Override
     public void prepareEditField(Preference androidPreference) {
         super.prepareEditField(androidPreference);
-        ((EditTextPreference) androidPreference).setDialogTitle("IPs (if multiple, separate with comma).");
+        ((EditTextPreference) androidPreference).setDialogTitle("IP of the host to receive debug messages.");
     }
 }

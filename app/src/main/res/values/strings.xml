@@ -26,6 +26,8 @@
     <string name="settings_log_limit_summary">Maximum number of last messages to display</string>
     <string name="settings_enable_debug">Enable debug</string>
     <string name="settings_enable_debug_summary">Enable debug for more logs</string>
+    <string name="settings_debug_ip">Debug Host IP</string>
+    <string name="settings_debug_ip_summary">IP of the host to receive debug messages</string>
     <string name="settings_debug_port">UDP Debug Port</string>
     <string name="settings_debug_port_summary">Port for sending debug messages</string>
 

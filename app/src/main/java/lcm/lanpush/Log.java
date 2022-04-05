@@ -7,6 +7,8 @@ import androidx.preference.PreferenceManager;
 
 import java.util.LinkedList;
 
+import lcm.lanpush.preferences.DebugHostPreference;
+import lcm.lanpush.preferences.DebugPortPreference;
 import lcm.lanpush.preferences.LogLimitPreference;
 import lcm.lanpush.utils.Data;
 
@@ -125,6 +127,10 @@ public class Log {
 
     public static void enableDebug(boolean enable) {
         enableDebug = enable;
+        if (enable) {
+            DebugHostPreference.inst.load();
+            DebugPortPreference.inst.load();
+        }
         d("Debug enabled: " + enableDebug);
     }
 

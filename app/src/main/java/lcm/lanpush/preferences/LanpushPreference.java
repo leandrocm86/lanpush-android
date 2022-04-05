@@ -53,6 +53,10 @@ public abstract class LanpushPreference<T> {
         return value;
     }
 
+    public T getDefaultValue() {
+        return defaultValue;
+    }
+
     private void saveValue(T value) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()).edit();
         persistValueInPreference(editor, value);

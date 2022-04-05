@@ -7,7 +7,7 @@ public class DebugPortPreference extends IntPreference {
     public static final DebugPortPreference inst = new DebugPortPreference();
 
     private DebugPortPreference() {
-        super("debugPort", Sender.DEFAULT_DEBUG_PORT);
+        super("debugPort", 1051);
     }
 
     @Override

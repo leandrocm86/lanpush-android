@@ -16,6 +16,8 @@ public class Sender {
 
     private static Sender inst;
 
+    private long lastSent = 0;
+
     public static Sender inst() {
         if (inst == null) {
             inst = new Sender();
@@ -41,6 +43,7 @@ public class Sender {
                     DatagramSocket dsocket = new DatagramSocket();
                     dsocket.send(packet);
                     dsocket.close();
+                    lastSent = System.currentTimeMillis();
                 }
                 catch (IOException e) {
                     if (port == debugPort)
@@ -61,8 +64,7 @@ public class Sender {
     }
 
     public void sendDebug(String message) {
-        for (String host : hosts)
-            send(message, host, debugPort);
+        send(message, debugHost, debugPort);
     }
 
     public void setHosts(String[] ips) {
@@ -81,5 +83,9 @@ public class Sender {
     public void setDebugHost(String debugHost) {
         this.debugHost = debugHost;
         Log.d("Debug host set: " + debugHost);
+    }
+
+    public long getLastSent() {
+        return lastSent;
     }
 }

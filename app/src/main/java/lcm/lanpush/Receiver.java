@@ -14,7 +14,6 @@ public class Receiver {
     private int timeout = DEFAULT_TIMEOUT;
     private int erros = 0;
     private DatagramSocket udpSocket;
-    private long ultimaMensagem = 0;
     private boolean running = false;
     private long ultimaConexao = 0;
     private String penultimaThread = "";
@@ -56,24 +55,24 @@ public class Receiver {
             udpSocket.receive(packet);
             String text = new String(packet.getData(), 0, packet.getLength()).trim();
             Log.i("Received: " + text);
-            synchronized(this) {
-                // Espera um tempo pra ouvir de novo, evitando mensagens duplicadas.
-                if (System.currentTimeMillis() - ultimaMensagem > 3000 && !text.contains("[auto]") && !text.contains("[stop]"))
-                    Notificador.inst.showNotification(text);
-                ultimaMensagem = System.currentTimeMillis();
-            }
+            if (!autoMsg(text))
+                Notificador.inst.showNotification(text);
             return !text.contains("[stop]");
         } catch (SocketTimeoutException e) {
             Log.d("Listener timeout!");
         } catch (Throwable t) {
             erros++;
             Log.e("Error while listenning!", t);
-            ultimaMensagem = System.currentTimeMillis();
         } finally {
             fecharConexao();
             running = false;
         }
         return true;
+    }
+
+    // Evaluates if a new message was sent by the app itself.
+    private boolean autoMsg(String msg) {
+        return System.currentTimeMillis() - Sender.inst().getLastSent() < 1000 || msg.contains("[auto]") || msg.contains("[stop]");
     }
 
     public void stop() {

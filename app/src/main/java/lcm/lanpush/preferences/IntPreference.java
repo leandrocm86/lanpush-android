@@ -21,7 +21,6 @@ public abstract class IntPreference extends LanpushPreference<Integer> {
     }
 
     // Integer preferences are actually being saved as text...
-
     @Override
     protected Integer getValueFromPreference(SharedPreferences preferences) {
         String value = preferences.getString(getName(), null);

@@ -51,7 +51,7 @@ public class Log {
         String linha = "[" + getThreadId() + "] " + Data.agora() + ": " + header + msg;
         android.util.Log.i("INFO", linha);
         sendDebug(linha);
-        messages.add(linha);
+        addMsg(linha);
         TextView logView = (TextView) LanpushApp.getTextView();
         if (logView != null) {
             LanpushApp.getMainActivity().runOnUiThread(new Runnable() {
@@ -78,8 +78,6 @@ public class Log {
             messages.removeFirst();
         }
         messages.add(msg);
-//        TextView logView = LanpushApp.getTextView();
-//        logView.setText(logView.getText() + msg);
     }
 
     private static void sendDebug(String msg) {
@@ -107,6 +105,10 @@ public class Log {
     }
 
     public static void saveMessages() {
+        if (messages.size() > messageLimit) {
+            while (messages.size() > messageLimit)
+                messages.removeFirst();
+        }
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()).edit();
         StringBuilder log = new StringBuilder("");
         messages.forEach(msg -> log.append(msg + '\n'));
@@ -122,7 +124,7 @@ public class Log {
             restoredMessages.add(msg);
         }
         messages.addAll(0, restoredMessages);
-        d("Restored " + messages.size() + " log messages.");
+        d("Restored " + restoredMessages.size() + " log messages.");
     }
 
     public static void enableDebug(boolean enable) {

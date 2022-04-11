@@ -39,6 +39,9 @@ public class FirstFragment extends Fragment {
 
         LanpushApp.saveTextView(binding.logview);
         Log.fillMessages(binding.logview);
+        // We need to wait some 500ms for the view to update its size before scrolling down.
+        binding.scrollView.postDelayed(
+                () -> {binding.scrollView.fullScroll(View.FOCUS_DOWN);}, 500);
     }
 
     @Override

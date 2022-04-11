@@ -7,7 +7,7 @@
     tools:context=".FirstFragment">
 
     <ScrollView
-        android:id="@+id/scrollView2"
+        android:id="@+id/scrollView"
         android:layout_width="409dp"
         android:layout_height="710dp"
         android:layout_marginTop="20dp"

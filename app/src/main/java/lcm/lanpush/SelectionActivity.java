@@ -13,7 +13,6 @@ public class SelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("Creating SelectionActivity");
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_selection);
         handleSelectedText();
         finish();
     }
@@ -21,13 +20,19 @@ public class SelectionActivity extends AppCompatActivity {
     private void handleSelectedText() {
         Log.d("Handling text selection...");
         try {
-            CharSequence text = getIntent().getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT);
-            Log.i("Selected text to send: " + text);
+            String text = getIntent().getStringExtra(Intent.EXTRA_PROCESS_TEXT);
+            if (text != null)
+                Log.i("Selected text to send: " + text);
+            else {
+                text = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+                if (text != null)
+                    Log.i("Shared link to send: " + text);
+            }
             if (text != null) {
-                String msg = text.toString().trim();
+                String msg = text.trim();
                 if (!msg.isEmpty()) {
                     Sender.inst().send(msg);
-                    Notificador.inst.showToast("Text Sent!");
+                    Notificador.inst.showToast("Lanpush Sent!");
                 }
             }
         } catch (Throwable t) {

@@ -6,6 +6,7 @@ import android.widget.TextView;
 import androidx.preference.PreferenceManager;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import lcm.lanpush.preferences.DebugHostPreference;
 import lcm.lanpush.preferences.DebugPortPreference;
@@ -49,28 +50,16 @@ public class Log {
 
     public static void log(String msg, String header) {
         String linha = "[" + getThreadId() + "] " + Data.agora() + ": " + header + msg;
-        android.util.Log.i("INFO", linha);
         sendDebug(linha);
         addMsg(linha);
-        TextView logView = (TextView) LanpushApp.getTextView();
+        LogFragment logView = (LogFragment) LanpushApp.getLogView();
         if (logView != null) {
-            LanpushApp.getMainActivity().runOnUiThread(new Runnable() {
-               @Override
-               public void run() {
-                   if (logView.getText().length() == 0) {
-                       fillMessages(logView);
-                   }
-                   else logView.setText(logView.getText() + linha + "\n");
-               }
-            });
+            logView.addMsg(linha);
         }
     }
 
-    public static void fillMessages(TextView logView) {
-        String output = "";
-        for (String msg : messages)
-            output += msg + "\n";
-        logView.setText(output);
+    public static List<String> getMessages() {
+        return messages;
     }
 
     private static void addMsg(String msg) {

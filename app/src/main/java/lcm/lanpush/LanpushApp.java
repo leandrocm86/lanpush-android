@@ -32,7 +32,7 @@ public class LanpushApp extends Application {
 
     private static WeakReference<Context> context;
     private static WeakReference<MainActivity> mainActivity;
-    private static WeakReference<TextView> textView;
+    private static WeakReference<LogFragment> logView;
 
     @Override
     public void onCreate() {
@@ -150,12 +150,16 @@ public class LanpushApp extends Application {
         return mainActivity != null ? mainActivity.get() : null;
     }
 
-    public static void saveTextView(TextView view) {
-        textView = new WeakReference<TextView>(view);
+    public static void saveLogView(LogFragment view) {
+        logView = new WeakReference<LogFragment>(view);
     }
 
-    public static TextView getTextView() {
-        return textView != null ? textView.get() : null;
+    public static void clearLogView() {
+        logView = null;
+    }
+
+    public static LogFragment getLogView() {
+        return logView != null ? logView.get() : null;
     }
 
     public static SharedPreferences getPreferences() {

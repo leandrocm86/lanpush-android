@@ -62,6 +62,8 @@ public class Notificador {
                 .setSmallIcon(R.drawable.lanpush_small)
                 .setContentTitle("LANPUSH")
                 .setContentText(msg)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(msg))
 //                .setContentIntent(contentIntent)
                 .setContentIntent(getBrowserIntent(msg))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)

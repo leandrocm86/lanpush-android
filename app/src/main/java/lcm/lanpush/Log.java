@@ -1,7 +1,6 @@
 package lcm.lanpush;
 
 import android.content.SharedPreferences;
-import android.widget.TextView;
 
 import androidx.preference.PreferenceManager;
 
@@ -41,15 +40,15 @@ public class Log {
         e(msg + ":\n" + resumeErro(t));
     }
 
-    public static String getThreadId() {
+    /*public static String getThreadId() {
         String threadId = "" + Thread.currentThread().getId();
         if (threadId.length() > 3)
             threadId = threadId.substring(threadId.length() - 3);
         return threadId;
-    }
+    }*/
 
     public static void log(String msg, String header) {
-        String linha = "[" + getThreadId() + "] " + Data.agora() + ": " + header + msg;
+        String linha = Data.agora() + ": " + header + msg;
         sendDebug(linha);
         addMsg(linha);
         LogFragment logView = (LogFragment) LanpushApp.getLogView();
@@ -99,10 +98,10 @@ public class Log {
                 messages.removeFirst();
         }
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()).edit();
-        StringBuilder log = new StringBuilder("");
+        StringBuilder log = new StringBuilder();
         messages.forEach(msg -> log.append(msg + '\n'));
         editor.putString("lanpush-logs", log.toString());
-        editor.commit();
+        editor.apply();
         d("Log saved.");
     }
 

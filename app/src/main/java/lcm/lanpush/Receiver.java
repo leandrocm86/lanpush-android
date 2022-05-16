@@ -16,8 +16,8 @@ public class Receiver {
     private DatagramSocket udpSocket;
     private boolean running = false;
     private long ultimaConexao = 0;
-    private String penultimaThread = "";
-    private String threadAtual = "";
+//    private String penultimaThread = "";
+//    private String threadAtual = "";
 
     public static final Receiver inst = new Receiver();
 
@@ -51,7 +51,7 @@ public class Receiver {
             DatagramPacket packet = reconectar();
             udpSocket.setSoTimeout(timeout);
             ultimaConexao = System.currentTimeMillis();
-            Log.d("Listener reconnecting. About to wait on UDP (" + erros + " errors, timeout " + timeout + ", thread " + atualizaThread() + ")");
+            Log.d("Listener reconnecting. About to wait on UDP (" + erros + " errors, timeout " + timeout + ")");
             udpSocket.receive(packet);
             String text = new String(packet.getData(), 0, packet.getLength()).trim();
             Log.i("Received: " + text);
@@ -79,11 +79,11 @@ public class Receiver {
         Sender.inst().send("[stop]");
     }
 
-    private String atualizaThread() {
+    /*private String atualizaThread() {
         penultimaThread = threadAtual;
         threadAtual = Log.getThreadId();
         return penultimaThread + "->" + threadAtual;
-    }
+    }*/
 
     private synchronized DatagramPacket reconectar() throws SocketException {
         if (udpSocket != null && !udpSocket.isClosed()) {

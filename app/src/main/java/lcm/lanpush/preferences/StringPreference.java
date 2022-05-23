@@ -2,13 +2,9 @@ package lcm.lanpush.preferences;
 
 import android.content.SharedPreferences;
 import android.text.InputType;
-import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
-
-import lcm.lanpush.Log;
 
 public abstract class StringPreference extends LanpushPreference<String> {
 

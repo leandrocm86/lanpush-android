@@ -5,12 +5,14 @@ import android.preference.PreferenceActivity;
 
 import androidx.preference.PreferenceFragmentCompat;
 
+import lcm.lanpush.preferences.AutoStartPreference;
 import lcm.lanpush.preferences.DebugHostPreference;
 import lcm.lanpush.preferences.DebugPortPreference;
 import lcm.lanpush.preferences.EnableDebugPreference;
 import lcm.lanpush.preferences.IPsPreference;
 import lcm.lanpush.preferences.LogLimitPreference;
 import lcm.lanpush.preferences.PortPreference;
+import lcm.lanpush.preferences.SleepPreference;
 import lcm.lanpush.preferences.TimeoutPreference;
 
 public class SettingsActivity extends PreferenceActivity {
@@ -44,6 +46,8 @@ public class SettingsActivity extends PreferenceActivity {
             IPsPreference.inst.prepareEditField(findPreference(IPsPreference.inst.getName()));
             PortPreference.inst.prepareEditField(findPreference(PortPreference.inst.getName()));
             TimeoutPreference.inst.prepareEditField(findPreference(TimeoutPreference.inst.getName()));
+            AutoStartPreference.inst.prepareEditField(findPreference(AutoStartPreference.inst.getName()));
+            SleepPreference.inst.prepareEditField(findPreference(SleepPreference.inst.getName()));
             LogLimitPreference.inst.prepareEditField(findPreference(LogLimitPreference.inst.getName()));
             EnableDebugPreference.inst.prepareEditField(findPreference(EnableDebugPreference.inst.getName()));
             DebugHostPreference.inst.prepareEditField(findPreference((DebugHostPreference.inst.getName())));

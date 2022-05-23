@@ -19,6 +19,19 @@
             app:useSimpleSummaryProvider="true"
             app:summary="@string/settings_timeout_summary"/>
 
+        <SwitchPreferenceCompat
+            app:key="autoStart"
+            app:title="@string/settings_autostart"
+            app:defaultValue="true"
+            app:useSimpleSummaryProvider="true"
+            app:summary="@string/settings_autostart_summary" />
+
+        <SwitchPreferenceCompat
+            app:key="sleep"
+            app:title="@string/settings_sleep"
+            app:useSimpleSummaryProvider="true"
+            app:summary="@string/settings_sleep_summary" />
+
        <!-- <ListPreference
             app:defaultValue="reply"
             app:entries="@array/reply_entries"

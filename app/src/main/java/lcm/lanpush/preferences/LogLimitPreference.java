@@ -3,7 +3,6 @@ package lcm.lanpush.preferences;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 
-import lcm.lanpush.LanpushApp;
 import lcm.lanpush.Log;
 
 public class LogLimitPreference extends IntPreference {

@@ -22,11 +22,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import lcm.lanpush.alarms.CheckAlarm;
-import lcm.lanpush.alarms.PeriodicCheckAlarm;
 import lcm.lanpush.databinding.ActivityMainBinding;
 import lcm.lanpush.notification.Notificador;
-import lcm.lanpush.workers.LanpushWorker;
 
 public class MainActivity extends AppCompatActivity {
 

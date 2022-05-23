@@ -22,8 +22,16 @@
     <string name="settings_UDP_port">UDP Port (for sending and receiving)</string>
     <string name="settings_timeout">Reconnection period</string>
     <string name="settings_timeout_summary">Time (in ms) to wait for a message</string>
+    <string name="settings_autostart">Auto start on reboot</string>
+    <string name="settings_autostart_summary">Starts listening the network on system boot</string>
+    <string name="settings_sleep">Sleep from midnight to dawn</string>
+    <string name="settings_sleep_summary">Stops listening for messages from 0:00 to 6:00. May save a bit of energy.</string>
+
+    <!-- Interface Preferences -->
     <string name="settings_log_limit">Message limit</string>
     <string name="settings_log_limit_summary">Maximum number of last messages to display</string>
+
+    <!-- Debug Preferences -->
     <string name="settings_enable_debug">Enable debug</string>
     <string name="settings_enable_debug_summary">Enable debug for more logs</string>
     <string name="settings_debug_ip">Debug Host IP</string>

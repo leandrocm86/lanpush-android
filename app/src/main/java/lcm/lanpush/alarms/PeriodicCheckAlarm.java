@@ -9,6 +9,7 @@ import android.os.SystemClock;
 import lcm.lanpush.LanpushApp;
 import lcm.lanpush.Log;
 import lcm.lanpush.Receiver;
+import lcm.lanpush.preferences.SleepPreference;
 import lcm.lanpush.utils.Data;
 
 public class PeriodicCheckAlarm extends Alarm {
@@ -17,7 +18,7 @@ public class PeriodicCheckAlarm extends Alarm {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Data.madrugada()) {
+        if (SleepPreference.inst.getValue() && Data.madrugada()) {
             Log.d("Periodic Alarm is resting.");
             return;
         }

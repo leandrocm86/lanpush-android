@@ -6,7 +6,6 @@ import android.content.ClipboardManager;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.TextView;
 
 import androidx.preference.PreferenceManager;
 import androidx.work.OneTimeWorkRequest;
@@ -17,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import lcm.lanpush.alarms.CheckAlarm;
 import lcm.lanpush.alarms.PeriodicCheckAlarm;
+import lcm.lanpush.preferences.AutoStartPreference;
 import lcm.lanpush.preferences.EnableDebugPreference;
 import lcm.lanpush.preferences.PortPreference;
 import lcm.lanpush.utils.Data;
@@ -36,26 +36,27 @@ public class LanpushApp extends Application {
 
     @Override
     public void onCreate() {
-        context = new WeakReference<>(getApplicationContext());
-        EnableDebugPreference.inst.load();
-        Log.i("---------- Starting LanpushApp ----------");
-        Log.loadMessages();
-        super.onCreate();
-        PortPreference.inst.load();
-        restartWorker();
-
-        PeriodicWorker.setPeriodicWorker();
-
-        PeriodicCheckAlarm.inst.setPeriodicAlarm();
-//        PeriodicWorkRequest lazaro =
-//                new PeriodicWorkRequest.Builder(LazaroWorker.class,
-//                        PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS,
-//                        PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS, TimeUnit.MILLISECONDS)
-//                        .build();
-//        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("Lazaro", ExistingPeriodicWorkPolicy.KEEP, lazaro);
-//        new Alarm().setAlarm(getApplicationContext());
-//        Notificador.getInstance().showNotification("Test");
-
+        try {
+            super.onCreate();
+            context = new WeakReference<>(getApplicationContext());
+            EnableDebugPreference.inst.load();
+            if (!AutoStartPreference.inst.getValue())
+                Thread.sleep(3000); // Wait for AutoStart check
+            if (AutoStart.isOkToStart()) {
+                Log.i("---------- Starting LanpushApp ----------");
+                Log.loadMessages();
+                PortPreference.inst.load();
+                restartWorker();
+                PeriodicWorker.setPeriodicWorker();
+                PeriodicCheckAlarm.inst.setPeriodicAlarm();
+            }
+            else {
+                shutdown();
+            }
+        }
+        catch(Throwable t) {
+            Log.e(t);
+        }
     }
 
     public static void shutdown() {

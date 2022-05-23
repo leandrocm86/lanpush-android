@@ -15,6 +15,8 @@ import lcm.lanpush.LanpushApp;
 import lcm.lanpush.Log;
 import lcm.lanpush.Receiver;
 import lcm.lanpush.Sender;
+import lcm.lanpush.alarms.CheckAlarm;
+import lcm.lanpush.preferences.SleepPreference;
 import lcm.lanpush.utils.Data;
 
 public class LanpushWorker extends Worker {
@@ -33,18 +35,23 @@ public class LanpushWorker extends Worker {
                 Looper.prepare();
             }
 
-            if (!Data.madrugada()) {
+            if (SleepPreference.inst.getValue() && Data.madrugada()) {
+                Log.d("Time to sleep. Application will be shutdown and scheduled to wake by the morning.");
+                LanpushApp.close();
+                CheckAlarm.inst.setAlarm(Data.timestampProximaManha());
+            }
+            else {
                 if (!Receiver.inst.isRunning()) {
                     listen();
                 } else if (execucaoDemorada()) {
-                    Log.d("Client diz que está rodando, mas já era pra ter dado timeout. Enviando auto-mensagem...");
-                    Sender.inst().send("[auto]");
+                    Log.d("Receiver seems to be listening, but timeout expired. Sending reconnect message...");
+                    Sender.inst().send("[reconnect]");
                     Thread.sleep(1000);
                     if (!Receiver.inst.isRunning()) {
-                        Log.d("Client parece ter parado. Religando...");
+                        Log.d("Receiver seems to have stopped. Restarting it...");
                         listen();
                     } else if (execucaoDemorada()) {
-                        Log.d("Auto-mensagem não surtiu efeito. Fechando a conexão e reiniciando...");
+                        Log.d("The reconnect message seems to have been ignored by the receiver. Closing connection and restarting...");
                         Receiver.inst.fecharConexao();
                         listen();
                     }

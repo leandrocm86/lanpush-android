@@ -13,6 +13,7 @@ import lcm.lanpush.Log;
 
 public abstract class LanpushPreference<T> {
     private String name;
+    private T value;
     private T defaultValue;
 
     protected LanpushPreference(String name, T defaultValue) {
@@ -29,6 +30,7 @@ public abstract class LanpushPreference<T> {
     public boolean changeValue(T value) {
         if (validate(value)) {
             Log.i("Changing " + name + ": " + value);
+            this.value = value;
             saveValue(value);
             apply(value);
             return true;
@@ -37,20 +39,21 @@ public abstract class LanpushPreference<T> {
     }
 
     public T getValue() {
-        T value = null;
-        try {
-            value = getValueFromPreference(PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()));
-        } catch (ClassCastException e) {
-            Log.e("Saved preference type different than expected. Preferences will be cleared.");
-            PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()).edit().clear().commit();
+        if (this.value == null) {
+            try {
+                this.value = getValueFromPreference(PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()));
+            } catch (ClassCastException e) {
+                Log.e("Saved preference type different than expected. Preferences will be cleared.");
+                PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()).edit().clear().commit();
+            }
+            if (this.value == null) {
+                Log.i("Preference not found, using default value for " + name);
+                saveValue(defaultValue);
+                Log.i("Saved default value " + defaultValue);
+                this.value = defaultValue;
+            }
         }
-        if (value == null) {
-            Log.i("Preference not found, using default value for " + name);
-            saveValue(defaultValue);
-            Log.i("Saved default value " + defaultValue);
-            value = defaultValue;
-        }
-        return value;
+        return this.value;
     }
 
     public T getDefaultValue() {

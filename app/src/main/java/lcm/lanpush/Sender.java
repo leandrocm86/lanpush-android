@@ -55,7 +55,7 @@ public class Sender {
     }
 
     public void send(String message) {
-        if ("[auto]".equals(message) || "[stop]".equals(message))
+        if ("[reconnect]".equals(message) || "[stop]".equals(message))
             send(message, "127.0.0.1", LanpushApp.getPort());
         else {
             for (String host : hosts)

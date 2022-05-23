@@ -72,7 +72,7 @@ public class Receiver {
 
     // Evaluates if a new message was sent by the app itself.
     private boolean autoMsg(String msg) {
-        return System.currentTimeMillis() - Sender.inst().getLastSent() < 1000 || msg.contains("[auto]") || msg.contains("[stop]");
+        return System.currentTimeMillis() - Sender.inst().getLastSent() < 1000 || msg.contains("[reconnect]") || msg.contains("[stop]");
     }
 
     public void stop() {

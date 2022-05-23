@@ -62,7 +62,7 @@ public class Log {
     }
 
     private static void addMsg(String msg) {
-        if (messages.size() >= messageLimit) {
+        if (messages.size() >= messageLimit && messages.size() > 0) {
             messages.removeFirst();
         }
         messages.add(msg);
@@ -75,12 +75,12 @@ public class Log {
         }
     }
 
-    private static String resumeErro(Throwable t) {
+    public static String resumeErro(Throwable t) {
         String resumo = t.getClass().getName() + ": " + t.getMessage();
         if (t.getCause() != null) {
             resumo += ". Cause: " + t.getCause().getClass().getName() + ": " + t.getCause().getMessage();
         }
-        resumo += stackTraceToStr(t, 10);
+        resumo += stackTraceToStr(t, 5);
         return resumo;
     }
 
@@ -99,7 +99,8 @@ public class Log {
         }
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()).edit();
         StringBuilder log = new StringBuilder();
-        messages.forEach(msg -> log.append(msg + '\n'));
+        for (String msg : messages)
+            log.append(msg + '\n');
         editor.putString("lanpush-logs", log.toString());
         editor.apply();
         d("Log saved.");

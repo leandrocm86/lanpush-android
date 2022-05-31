@@ -18,11 +18,13 @@ public class CheckAlarm extends Alarm {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        boolean running = Receiver.inst.isRunning();
-        String diagnostic = running ? "Connection seems OK" : "Connection stopped. Restarting...";
-        Log.d("Check Alarm being triggered... " + diagnostic);
-        if (!running)
+        Log.d("Check Alarm being triggered... ");
+        if (Receiver.inst.isRunning())
+            Log.d("Connection seems OK");
+        else {
+            Log.d("Connection stopped. Restarting...");
             LanpushApp.restartWorker();
+        }
 //        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 //        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "lanpush:alarm");
 //        wl.acquire();

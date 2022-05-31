@@ -32,7 +32,7 @@ public class SelectionActivity extends AppCompatActivity {
                 String msg = text.trim();
                 if (!msg.isEmpty()) {
                     Sender.inst().send(msg);
-                    Notificador.inst.showToast("Lanpush Sent!");
+                    Notificador.inst.showToast("Text Sent!");
                 }
             }
         } catch (Throwable t) {

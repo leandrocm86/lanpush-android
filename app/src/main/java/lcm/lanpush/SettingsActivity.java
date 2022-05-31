@@ -22,16 +22,6 @@ public class SettingsActivity extends PreferenceActivity {
         Log.d("onCreatePreferenceActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id.settings, new SettingsFragment())
-//                    .commit();
-//        }
-//        ActionBar actionBar = getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
@@ -45,7 +35,7 @@ public class SettingsActivity extends PreferenceActivity {
 
             IPsPreference.inst.prepareEditField(findPreference(IPsPreference.inst.getName()));
             PortPreference.inst.prepareEditField(findPreference(PortPreference.inst.getName()));
-            TimeoutPreference.inst.prepareEditField(findPreference(TimeoutPreference.inst.getName()));
+//            TimeoutPreference.inst.prepareEditField(findPreference(TimeoutPreference.inst.getName()));
             AutoStartPreference.inst.prepareEditField(findPreference(AutoStartPreference.inst.getName()));
             SleepPreference.inst.prepareEditField(findPreference(SleepPreference.inst.getName()));
             LogLimitPreference.inst.prepareEditField(findPreference(LogLimitPreference.inst.getName()));

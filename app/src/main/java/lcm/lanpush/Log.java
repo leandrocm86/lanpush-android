@@ -13,7 +13,7 @@ import lcm.lanpush.preferences.LogLimitPreference;
 import lcm.lanpush.utils.Data;
 
 public class Log {
-    private static int id = 0;
+//    private static int id = 0;
     private static LinkedList<String> messages = new LinkedList<>();
     private static int messageLimit = LogLimitPreference.inst.getValue();
 
@@ -70,8 +70,8 @@ public class Log {
 
     private static void sendDebug(String msg) {
         if (enableDebug && !msg.contains("[DEBUG-ERROR]")) {
-            msg = "L" + ++id + msg + "\n";
-            Sender.inst().sendDebug(msg);
+//            msg = "L" + ++id + msg + "\n";
+            Sender.inst().sendDebug(msg + "\n");
         }
     }
 

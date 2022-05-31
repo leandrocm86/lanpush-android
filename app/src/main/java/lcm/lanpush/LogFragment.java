@@ -63,19 +63,19 @@ public class LogFragment extends Fragment {
     }
 
     private void scrollDown() {
-        // We need to wait some 500ms for the view to update its size before scrolling down.
+        // We need to wait 1s for the view to update its size before scrolling down.
         binding.scrollView.postDelayed(() -> {
                         if (binding != null && binding.scrollView != null)
                             binding.scrollView.fullScroll(View.FOCUS_DOWN);
                     }
-                , 500);
+                , 1000);
     }
 
     @Override
     public void onDestroyView() {
+        Log.d("Destroying LogView...");
         super.onDestroyView();
         LanpushApp.clearLogView();
         binding = null;
-        Log.d("LogView destroyed");
     }
 }

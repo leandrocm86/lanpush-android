@@ -80,7 +80,7 @@ public class LanpushApp extends Application {
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
-        Log.d("OnTrimMemory: Level " + level + " - " + descriptionForMemoryLevel(level));
+        Log.d("OnTrimMemory: Level " + level);
         if (level >= 40) {
             if (System.currentTimeMillis() - lastConnectionCheck > 60000) {
                 ActivityManager.MemoryInfo memoryInfo = getMemoryInfo();
@@ -102,7 +102,7 @@ public class LanpushApp extends Application {
         return memoryInfo;
     }
 
-    private String descriptionForMemoryLevel(int level) {
+    /*private String descriptionForMemoryLevel(int level) {
         switch (level) {
             case ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE:
                 return "RUNNING MODERATE";
@@ -121,7 +121,7 @@ public class LanpushApp extends Application {
 
             default: return "?";
         }
-    }
+    }*/
 
     public static void restartWorker() {
         Log.d("Restarting worker...");

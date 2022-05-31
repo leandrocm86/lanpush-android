@@ -112,38 +112,34 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_reconnection) {
-            try {
-                Log.d("Reconectando...");
-                Notificador.inst.showToast("Reconectando...");
-                LanpushApp.restartWorker();
-            } catch (Throwable t) {
-                Log.e(t);
-            }
-        }
-        else if (id == R.id.action_settings) {
+//        if (id == R.id.action_reconnection) {
+//            try {
+//                Log.d("Reconectando...");
+//                Notificador.inst.showToast("Reconectando...");
+//                LanpushApp.restartWorker();
+//            } catch (Throwable t) {
+//                Log.e(t);
+//            }
+//        }
+        if (id == R.id.action_settings) {
             NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-//            NavigationUI.navigateUp(navController, appBarConfiguration);
             navController.navigate(R.id.settings);
         }
         else if (id == R.id.action_about) {
-            // Use the Builder class for convenient dialog construction
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.about)
-                    .setPositiveButton(R.string.about_git, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/leandrocm86/lanpush-android")));
-                        }
-                    })
-                    .setNegativeButton(R.string.about_close, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
-                    })
-                    .setIcon(R.drawable.lanpush_small);
-            // Create the AlertDialog object and return it
-            builder.create().show();
+                .setPositiveButton(R.string.about_git, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/leandrocm86/lanpush-android")));
+                    }
+                })
+                .setNegativeButton(R.string.about_close, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                })
+                .setIcon(R.drawable.lanpush_small);
+            builder.create().show();// Create the AlertDialog object and return it
         }
         else if (id == R.id.action_close) {
             LanpushApp.close();
@@ -165,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         Log.d("Destroying MainActivity");
         super.onDestroy();
-//        CDI.clear();
     }
 
     @Override

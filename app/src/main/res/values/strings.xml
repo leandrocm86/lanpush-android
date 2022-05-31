@@ -1,15 +1,16 @@
 <resources>
-    <string name="app_name">Lanpush</string>
-    <string name="first_fragment_label">Lanpush</string>
+    <string name="app_name">LANPUSH</string>
+    <string name="first_fragment_label">LANPUSH</string>
     <string name="action_settings">Settings</string>
     <string name="action_reconnection">Force reconnection</string>
     <string name="action_about">About</string>
     <string name="action_close">Disconnect and close</string>
     <!-- Strings used for fragments for navigation -->
 
-    <string name="about">Lanpush is a free project and it\'s open for suggestions. Visit the project space on github for more info.</string>
+    <string name="about">Version 2022.1 \n\nLANPUSH is a free project and it\'s open for suggestions. Visit the project space on github for more info.</string>
     <string name="about_git">Visit</string>
     <string name="about_close">Close</string>
+
 
     <!-- Preference Titles -->
     <string name="preference_connection_header">Connection</string>

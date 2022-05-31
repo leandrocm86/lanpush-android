@@ -51,6 +51,9 @@ public class LanpushWorker extends Worker {
                         Log.d("Receiver seems to have stopped. Restarting it...");
                         listen();
                     } else if (execucaoDemorada()) {
+                        // Sometimes timeout expires but the Receiver is still listening.
+                        // That's why we send a 'reconnect' message to test it.
+                        // Here is the case that it wasn't listening after all. I never saw it happen, but this is here just in case.
                         Log.d("The reconnect message seems to have been ignored by the receiver. Closing connection and restarting...");
                         Receiver.inst.fecharConexao();
                         listen();

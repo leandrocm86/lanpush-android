@@ -51,7 +51,7 @@ public class Receiver {
             DatagramPacket packet = reconectar();
             udpSocket.setSoTimeout(timeout);
             ultimaConexao = System.currentTimeMillis();
-            Log.d("Listener reconnecting. About to wait on UDP (" + erros + " errors, timeout " + timeout + ")");
+            Log.d("Listener reconnecting on UDP " + LanpushApp.getPort());
             udpSocket.receive(packet);
             String text = new String(packet.getData(), 0, packet.getLength()).trim();
             Log.i("Received: " + text);

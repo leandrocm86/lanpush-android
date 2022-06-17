@@ -21,7 +21,10 @@
 
     <style name="Theme.Lanpush.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.Lanpush.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.Lanpush.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:background">@color/grey</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 
     <style name="Theme.AppCompat.Transparent.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>

@@ -1,5 +1,7 @@
 package lcm.lanpush.preferences;
 
+import lcm.lanpush.LanpushApp;
+import lcm.lanpush.R;
 import lcm.lanpush.Sender;
 
 public class DebugPortPreference extends IntPreference {
@@ -7,7 +9,8 @@ public class DebugPortPreference extends IntPreference {
     public static final DebugPortPreference inst = new DebugPortPreference();
 
     private DebugPortPreference() {
-        super("debugPort", 1051);
+        super(LanpushApp.get(R.string.settings_debug_port_key),
+                Integer.parseInt(LanpushApp.get(R.string.settings_debug_port_default)));
     }
 
     @Override

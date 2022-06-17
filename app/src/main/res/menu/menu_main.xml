@@ -2,25 +2,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="lcm.lanpush.MainActivity">
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
-    <!--
-    <item
-        android:id="@+id/action_reconnection"
-        android:orderInCategory="100"
-        android:title="@string/action_reconnection"
-        app:showAsAction="never" />-->
-    <item
-        android:id="@+id/action_about"
-        android:orderInCategory="100"
-        android:title="@string/action_about"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_close"
-        android:orderInCategory="100"
-        android:title="@string/action_close"
-        app:showAsAction="never" />
+
+        <item
+            android:id="@+id/action_settings"
+            android:orderInCategory="100"
+            android:title="@string/action_settings"
+            android:icon="@android:drawable/ic_menu_preferences"/>
+        <!--
+        <item
+            android:id="@+id/action_reconnection"
+            android:orderInCategory="100"
+            android:title="@string/action_reconnection"
+            app:showAsAction="never" />-->
+        <item
+            android:id="@+id/action_about"
+            android:orderInCategory="100"
+            android:title="@string/action_about"
+            android:icon="@android:drawable/ic_menu_help"/>
+        <item
+            android:id="@+id/action_close"
+            android:orderInCategory="100"
+            android:title="@string/action_close"
+            android:icon="@android:drawable/ic_menu_close_clear_cancel"/>
 </menu>

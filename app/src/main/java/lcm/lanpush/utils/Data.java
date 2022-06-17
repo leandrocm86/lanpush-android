@@ -5,24 +5,26 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Data {
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMdd HH:mm:ss");
+
     public static String agora() {
-        return new SimpleDateFormat("MMM-dd HH:mm").format(new Date());
+        return dateFormat.format(new Date());
 //        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
     }
 
-    public static long timestampProximaManha(){
+    public static long timestampNextMorning(){
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.set(Calendar.HOUR_OF_DAY, 6);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        if (!madrugada())
+        if (!isSleepTime())
             cal.add(Calendar.DATE, 1);
         return cal.getTime().getTime();
     }
 
-    public static boolean madrugada() {
+    public static boolean isSleepTime() {
         int hora = getHora();
         return hora >= 0 && hora < 6;
     }
@@ -48,11 +50,10 @@ public class Data {
                 else
                     retorno.append(milisegundos/Data.MINUTO).append("m").append(formataTempo(milisegundos % Data.MINUTO));
             }
-            else
-                retorno.append(milisegundos/Data.SEGUNDO).append("s").append(formataTempo(milisegundos % Data.SEGUNDO));
+            // else retorno.append(milisegundos/Data.SEGUNDO).append("s").append(formataTempo(milisegundos % Data.SEGUNDO));
         }
         else {
-            retorno.append(milisegundos).append("ms");
+            //retorno.append(milisegundos).append("ms");
         }
         return retorno.toString();
     }

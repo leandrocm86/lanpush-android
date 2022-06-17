@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import lcm.lanpush.preferences.DebugHostPreference;
 import lcm.lanpush.preferences.DebugPortPreference;
 import lcm.lanpush.preferences.IPsPreference;
+import lcm.lanpush.preferences.PortPreference;
 
 public class Sender {
     private String[] hosts = {IPsPreference.inst.getDefaultValue()};
@@ -46,7 +47,7 @@ public class Sender {
                     lastSent = System.currentTimeMillis();
                 }
                 catch (IOException e) {
-                    if (port == debugPort)
+                    if (port == DebugPortPreference.inst.getValue())
                         Log.log(e.getClass().getName() + ": " + e.getMessage(), "[DEBUG-ERROR] ");
                     else
                         Log.e("Error while sending message", e);
@@ -56,10 +57,10 @@ public class Sender {
 
     public void send(String message) {
         if ("[reconnect]".equals(message) || "[stop]".equals(message))
-            send(message, "127.0.0.1", LanpushApp.getPort());
+            send(message, "127.0.0.1", PortPreference.inst.getValue());
         else {
             for (String host : hosts)
-                send(message, host, LanpushApp.getPort());
+                send(message, host, PortPreference.inst.getValue());
         }
     }
 

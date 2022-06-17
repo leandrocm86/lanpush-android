@@ -4,13 +4,15 @@
     <PreferenceCategory app:title="@string/preference_connection_header">
 
         <EditTextPreference
-            app:key="ips"
+            app:key="@string/settings_ips_key"
             app:title="@string/settings_ips"
+            app:defaultValue="@string/settings_ips_default"
             app:useSimpleSummaryProvider="true"/>
 
         <EditTextPreference
-            app:key="port"
+            app:key="@string/settings_UDP_port_key"
             app:title="@string/settings_UDP_port"
+            app:defaultValue="@string/settings_UDP_port_default"
             app:useSimpleSummaryProvider="true"/>
 
         <!--
@@ -22,15 +24,16 @@
             -->
 
         <SwitchPreferenceCompat
-            app:key="autoStart"
+            app:key="@string/settings_autostart_key"
             app:title="@string/settings_autostart"
-            app:defaultValue="true"
+            app:defaultValue="@string/settings_autostart_default"
             app:useSimpleSummaryProvider="true"
             app:summary="@string/settings_autostart_summary" />
 
         <SwitchPreferenceCompat
-            app:key="sleep"
+            app:key="@string/settings_sleep_key"
             app:title="@string/settings_sleep"
+            app:defaultValue="@string/settings_sleep_default"
             app:useSimpleSummaryProvider="true"
             app:summary="@string/settings_sleep_summary" />
 
@@ -46,8 +49,9 @@
 
     <PreferenceCategory app:title="@string/preference_ui_header">
         <EditTextPreference
-            app:key="logLimit"
+            app:key="@string/settings_log_limit_key"
             app:title="@string/settings_log_limit"
+            app:defaultValue="@string/settings_log_limit_default"
             app:useSimpleSummaryProvider="true"
             app:summary="@string/settings_log_limit_summary"/>
     </PreferenceCategory>
@@ -55,24 +59,27 @@
     <PreferenceCategory app:title="@string/preference_debug_header">
 
         <SwitchPreferenceCompat
-            app:key="enableDebug"
+            app:key="@string/settings_enable_debug_key"
             app:title="@string/settings_enable_debug"
+            app:defaultValue="@string/settings_enable_debug_default"
             app:useSimpleSummaryProvider="true"
             app:summary="@string/settings_enable_debug_summary" />
 
         <EditTextPreference
-            app:key="debugIP"
+            app:key="@string/settings_debug_ip_key"
             app:title="@string/settings_debug_ip"
+            app:defaultValue="@string/settings_debug_ip_default"
             app:useSimpleSummaryProvider="true"
             app:summary="@string/settings_debug_ip_summary"
-            app:dependency="enableDebug"/>
+            app:dependency="@string/settings_enable_debug_key"/>
 
         <EditTextPreference
-            app:key="debugPort"
+            app:key="@string/settings_debug_port_key"
             app:title="@string/settings_debug_port"
+            app:defaultValue="@string/settings_debug_port_default"
             app:useSimpleSummaryProvider="true"
             app:summary="@string/settings_debug_port_summary"
-            app:dependency="enableDebug"/>
+            app:dependency="@string/settings_enable_debug_key"/>
 
     </PreferenceCategory>
 

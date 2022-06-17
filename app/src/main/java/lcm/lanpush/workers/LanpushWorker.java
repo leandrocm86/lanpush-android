@@ -35,27 +35,27 @@ public class LanpushWorker extends Worker {
                 Looper.prepare();
             }
 
-            if (SleepPreference.inst.getValue() && Data.madrugada()) {
-                Log.d("Time to sleep. Application will be shutdown and scheduled to wake by the morning.");
-                LanpushApp.close();
-                CheckAlarm.inst.setAlarm(Data.timestampProximaManha());
+            if (SleepPreference.inst.getValue() && Data.isSleepTime()) {
+                Log.i("Time to sleep. Application will be shutdown and scheduled to wake by the morning.");
+                LanpushApp.close(false);
+                CheckAlarm.inst.setAlarm(Data.timestampNextMorning());
             }
             else {
                 if (!Receiver.inst.isRunning()) {
                     listen();
-                } else if (execucaoDemorada()) {
+                } else if (timeoutIsLate()) {
                     Log.d("Receiver seems to be listening, but timeout expired. Sending reconnect message...");
                     Sender.inst().send("[reconnect]");
                     Thread.sleep(1000);
                     if (!Receiver.inst.isRunning()) {
                         Log.d("Receiver seems to have stopped. Restarting it...");
                         listen();
-                    } else if (execucaoDemorada()) {
+                    } else if (timeoutIsLate()) {
                         // Sometimes timeout expires but the Receiver is still listening.
                         // That's why we send a 'reconnect' message to test it.
                         // Here is the case that it wasn't listening after all. I never saw it happen, but this is here just in case.
                         Log.d("The reconnect message seems to have been ignored by the receiver. Closing connection and restarting...");
-                        Receiver.inst.fecharConexao();
+                        Receiver.inst.closeConnection();
                         listen();
                     }
                 }
@@ -73,9 +73,11 @@ public class LanpushWorker extends Worker {
             enqueueNextWork();
     }
 
-    private boolean execucaoDemorada() {
-        long ultimaConexao = Receiver.inst.getUltimaConexao();
-        return ultimaConexao != 0 && System.currentTimeMillis() - ultimaConexao > 2* Receiver.inst.getTimeout();
+    private boolean timeoutIsLate() {
+        long lastConnection = Receiver.inst.getLastConnection();
+        // It's normal to have timeouts a bit longer than configured.
+        // We only consider it's too late when it passed double its configured time.
+        return lastConnection != 0 && System.currentTimeMillis() - lastConnection > 2* Receiver.inst.getTimeout();
     }
 
     private void enqueueNextWork() {

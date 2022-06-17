@@ -21,7 +21,8 @@ public abstract class LanpushPreference<T> {
         this.defaultValue = defaultValue;
     }
 
-    public abstract void apply(T value);
+    // Optional method to override. Does something when the preference value is changed.
+    public void apply(T value) {}
 
     public void load() {
         apply(getValue());
@@ -29,7 +30,7 @@ public abstract class LanpushPreference<T> {
 
     public boolean changeValue(T value) {
         if (validate(value)) {
-            Log.i("Changing " + name + ": " + value);
+            Log.i("Changing setting '" + name + "' from " + this.value + " to " + value);
             this.value = value;
             saveValue(value);
             apply(value);
@@ -43,14 +44,13 @@ public abstract class LanpushPreference<T> {
             try {
                 this.value = getValueFromPreference(PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()));
             } catch (ClassCastException e) {
-                Log.e("Saved preference type different than expected. Preferences will be cleared.");
                 PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()).edit().clear().commit();
+                Log.e("Saved setting type different than expected. Saved preferences are now restored.");
             }
             if (this.value == null) {
-                Log.i("Preference not found, using default value for " + name);
-                saveValue(defaultValue);
-                Log.i("Saved default value " + defaultValue);
                 this.value = defaultValue;
+                saveValue(defaultValue);
+                Log.d("Setting '" + name + "' not found. Using default value " + defaultValue);
             }
         }
         return this.value;

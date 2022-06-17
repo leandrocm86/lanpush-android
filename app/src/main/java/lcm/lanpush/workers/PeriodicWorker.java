@@ -24,7 +24,7 @@ public class PeriodicWorker extends LanpushWorker {
     @NonNull
     @Override
     public Result doWork() {
-        Log.d("Starting periodic worker...");
+        Log.d("Starting preventive Periodic Worker...");
         return super.doWork();
     }
 

@@ -6,6 +6,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 import lcm.lanpush.notification.Notificador;
+import lcm.lanpush.preferences.PortPreference;
 import lcm.lanpush.preferences.TimeoutPreference;
 
 public class Receiver {
@@ -15,7 +16,7 @@ public class Receiver {
     private int erros = 0;
     private DatagramSocket udpSocket;
     private boolean running = false;
-    private long ultimaConexao = 0;
+    private long lastConnection = 0;
 //    private String penultimaThread = "";
 //    private String threadAtual = "";
 
@@ -29,12 +30,12 @@ public class Receiver {
     public boolean isRunning() {
         return running;
     }
-    public long getUltimaConexao() { return ultimaConexao; }
+    public long getLastConnection() { return lastConnection; }
 
     public boolean run() {
         if (erros == 3) {
             Notificador.inst.showNotification("Since there were 3 errors, the app is getting closed.");
-            LanpushApp.close();
+            LanpushApp.close(false);
             System.exit(1);
         }
         return listen();
@@ -48,15 +49,18 @@ public class Receiver {
         running = true;
 //        Notificador.getInstance().showNotification("Teste");
         try {
-            DatagramPacket packet = reconectar();
+            DatagramPacket packet = reconnect();
             udpSocket.setSoTimeout(timeout);
-            ultimaConexao = System.currentTimeMillis();
-            Log.d("Listener reconnecting on UDP " + LanpushApp.getPort());
+            lastConnection = System.currentTimeMillis();
+            Log.d("Listener reconnecting on UDP " + PortPreference.inst.getValue());
             udpSocket.receive(packet);
             String text = new String(packet.getData(), 0, packet.getLength()).trim();
-            Log.i("Received: " + text);
-            if (!autoMsg(text))
+            if (autoMsg(text))
+                Log.d("Received: " + text);
+            else {
+                Log.i("Received: " + text);
                 Notificador.inst.showNotification(text);
+            }
             return !text.contains("[stop]");
         } catch (SocketTimeoutException e) {
             Log.d("Listener timeout!");
@@ -64,7 +68,7 @@ public class Receiver {
             erros++;
             Log.e("Error while listenning!", t);
         } finally {
-            fecharConexao();
+            closeConnection();
             running = false;
         }
         return true;
@@ -85,17 +89,17 @@ public class Receiver {
         return penultimaThread + "->" + threadAtual;
     }*/
 
-    private synchronized DatagramPacket reconectar() throws SocketException {
+    private synchronized DatagramPacket reconnect() throws SocketException {
         if (udpSocket != null && !udpSocket.isClosed()) {
             Log.d("Socket was already active while trying to reconnect. Closing it...");
-            fecharConexao();
+            closeConnection();
         }
-        udpSocket = new DatagramSocket(LanpushApp.getPort());
+        udpSocket = new DatagramSocket(PortPreference.inst.getValue());
         byte[] message = new byte[8000];
         return new DatagramPacket(message, message.length);
     }
 
-    public synchronized void fecharConexao() {
+    public synchronized void closeConnection() {
         if (udpSocket != null) {
             try {
                 if (udpSocket.isClosed())

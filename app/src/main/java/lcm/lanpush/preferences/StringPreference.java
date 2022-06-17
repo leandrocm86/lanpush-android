@@ -13,7 +13,6 @@ public abstract class StringPreference extends LanpushPreference<String> {
     @Override
     public void prepareEditField(Preference androidPreference) {
         EditTextPreference inputText = (EditTextPreference) androidPreference;
-        inputText.setDialogTitle("title");
         inputText.setOnPreferenceChangeListener(super.buildChangeListener());
         inputText.setOnBindEditTextListener(buildBindListener(InputType.TYPE_CLASS_TEXT));
     }

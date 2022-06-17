@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             builder.create().show();// Create the AlertDialog object and return it
         }
         else if (id == R.id.action_close) {
-            LanpushApp.close();
+            LanpushApp.close(false);
             finishAffinity();
             finishAndRemoveTask();
         }

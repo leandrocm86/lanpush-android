@@ -26,18 +26,16 @@ public class LogFragment extends Fragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        Log.d("Creating log view...");
         super.onViewCreated(view, savedInstanceState);
-        Log.d("Loading messages...");
-
-//        binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                NavHostFragment.findNavController(FirstFragment.this)
-//                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
-//            }
-//        });
-
         LanpushApp.saveLogView(this);
+//        this.fillMessages();
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedBundle) {
+        Log.d("Restoring log view...");
+        super.onViewStateRestored(savedBundle);
         this.fillMessages();
     }
 
@@ -55,10 +53,12 @@ public class LogFragment extends Fragment {
     }
 
     public void fillMessages() {
+        Log.d("Loading messages...");
         String output = "";
         for (String msg : Log.getMessages())
             output += msg + "\n";
-        binding.logview.setText(output);
+        if (output.length() > 0)
+            binding.logview.setText(output);
         scrollDown();
     }
 

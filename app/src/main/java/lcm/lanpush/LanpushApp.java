@@ -3,7 +3,6 @@ package lcm.lanpush;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.ClipboardManager;
-import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -16,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 
 import lcm.lanpush.alarms.CheckAlarm;
 import lcm.lanpush.alarms.PeriodicCheckAlarm;
-import lcm.lanpush.preferences.AutoStartPreference;
 import lcm.lanpush.preferences.EnableDebugPreference;
 import lcm.lanpush.preferences.PortPreference;
 import lcm.lanpush.utils.Data;
@@ -26,8 +24,6 @@ import lcm.lanpush.workers.PeriodicWorker;
 
 public class LanpushApp extends Application {
 
-    public static final int DEFAULT_PORT = 1050;
-    private static int port = DEFAULT_PORT;
     private static long lastConnectionCheck;
 
     private static WeakReference<Context> context;
@@ -40,28 +36,31 @@ public class LanpushApp extends Application {
             super.onCreate();
             context = new WeakReference<>(getApplicationContext());
             EnableDebugPreference.inst.load();
-            if (!AutoStartPreference.inst.getValue())
-                Thread.sleep(3000); // Wait for AutoStart check
-            if (AutoStart.isOkToStart()) {
-                Log.i("---------- Starting LanpushApp ----------");
-                Log.loadMessages();
-                PortPreference.inst.load();
-                restartWorker();
-                PeriodicWorker.setPeriodicWorker();
-                PeriodicCheckAlarm.inst.setPeriodicAlarm();
-            }
-            else {
-                shutdown();
-            }
+            Log.loadMessages();
+            start();
         }
         catch(Throwable t) {
             Log.e(t);
         }
     }
 
-    public static void shutdown() {
-        System.exit(0);
-//        Android.OS.Process.KillProcess(Androi.OS.Process.MyPid());
+    public static void start() {
+        Log.d("---------- Starting LanpushApp ----------");
+        PortPreference.inst.load();
+        restartWorker();
+        PeriodicWorker.setPeriodicWorker();
+        PeriodicCheckAlarm.inst.setPeriodicAlarm();
+    }
+
+    public static void close(boolean ignoreLogs) {
+        if (!ignoreLogs)
+            Log.i("Closing the application...");
+        LanpushWorker.cancel();
+        CheckAlarm.inst.cancel();
+        PeriodicCheckAlarm.inst.cancel();
+        Sender.inst().send("[stop]");
+        if (!ignoreLogs)
+            Log.saveMessages();
     }
 
     @Override
@@ -85,7 +84,7 @@ public class LanpushApp extends Application {
             if (System.currentTimeMillis() - lastConnectionCheck > 60000) {
                 ActivityManager.MemoryInfo memoryInfo = getMemoryInfo();
                 Log.d("LowMemory: " + memoryInfo.lowMemory + ", used " + (Math.round(100-memoryInfo.availMem*100/memoryInfo.totalMem)) + "%");
-                if (!Data.madrugada())
+                if (!Data.isSleepTime())
                     CheckAlarm.inst.setAlarm(System.currentTimeMillis() + 60000);
                 Log.saveMessages();
                 lastConnectionCheck = System.currentTimeMillis();
@@ -131,16 +130,12 @@ public class LanpushApp extends Application {
         WorkManager.getInstance(getContext()).enqueue(mywork);
     }
 
-    public static void close() {
-        Log.i("Closing the application...");
-        LanpushWorker.cancel();
-        CheckAlarm.inst.cancel();
-        PeriodicCheckAlarm.inst.cancel();
-        Sender.inst().send("[stop]");
-    }
-
     public static Context getContext() {
         return context.get();
+    }
+
+    public static String get(int key) {
+        return getContext().getString(key);
     }
 
     public static void saveMainActivity(MainActivity activity) {
@@ -171,12 +166,4 @@ public class LanpushApp extends Application {
         return (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
     }
 
-    public static void setPort(int port) {
-        port = port;
-        Log.d("Port set: " + port);
-    }
-
-    public static int getPort() {
-        return port;
-    }
 }

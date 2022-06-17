@@ -18,7 +18,7 @@ public class PeriodicCheckAlarm extends Alarm {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (SleepPreference.inst.getValue() && Data.madrugada()) {
+        if (SleepPreference.inst.getValue() && Data.isSleepTime()) {
             Log.d("Periodic Alarm is resting.");
             return;
         }
@@ -37,7 +37,7 @@ public class PeriodicCheckAlarm extends Alarm {
     }
 
     public void setPeriodicAlarm() {
-        Log.d("Setting periodic Alarm...");
+        Log.d("Setting preventive Periodic Alarm...");
         getAlarmManager().setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES,
                 AlarmManager.INTERVAL_FIFTEEN_MINUTES, getPendingIntent());

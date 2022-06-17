@@ -10,7 +10,9 @@ import androidx.preference.Preference;
 
 import java.util.regex.Pattern;
 
+import lcm.lanpush.LanpushApp;
 import lcm.lanpush.Log;
+import lcm.lanpush.R;
 import lcm.lanpush.Sender;
 import lcm.lanpush.notification.Notificador;
 
@@ -19,7 +21,8 @@ public class DebugHostPreference extends StringPreference {
     public static final DebugHostPreference inst = new DebugHostPreference();
 
     private DebugHostPreference() {
-        super("debugIP", "192.168.0.255");
+       super(LanpushApp.get(R.string.settings_debug_ip_key),
+               LanpushApp.get(R.string.settings_debug_ip_default));
     }
 
     @Override

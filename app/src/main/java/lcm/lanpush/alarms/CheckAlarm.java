@@ -37,7 +37,7 @@ public class CheckAlarm extends Alarm {
     public void setAlarm(long triggerAtMillis) {
         AlarmManager alarmMgr = super.getAlarmManager();
         if (Build.VERSION.SDK_INT < 31 || alarmMgr.canScheduleExactAlarms()) {
-            Log.d("Configuring wake up in " + Data.formataTempo(triggerAtMillis - System.currentTimeMillis()));
+            Log.d("Configuring preventive wake up in " + Data.formataTempo(triggerAtMillis - System.currentTimeMillis()));
             alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, getPendingIntent());
         } else {
             Log.d("There's no permission to set alarms. The application may be killed and don't restart.");

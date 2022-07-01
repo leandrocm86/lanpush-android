@@ -30,7 +30,7 @@ public abstract class LanpushPreference<T> {
 
     public boolean changeValue(T value) {
         if (validate(value)) {
-            Log.i("Changing setting '" + name + "' from " + this.value + " to " + value);
+            Log.i("Changing setting '" + name + "' from " + getValue() + " to " + value);
             this.value = value;
             saveValue(value);
             apply(value);

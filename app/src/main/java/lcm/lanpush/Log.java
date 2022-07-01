@@ -102,8 +102,11 @@ public class Log {
             }
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()).edit();
             StringBuilder log = new StringBuilder();
-            for (String msg : messages)
-                log.append(msg + '\n');
+            for (String msg : messages) {
+                if (log.length() > 0)
+                    log.append("\n");
+                log.append(msg);
+            }
             editor.putString("lanpush-logs", log.toString());
     //        editor.apply();
             editor.commit();
@@ -115,7 +118,8 @@ public class Log {
         String savedLog = PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()).getString("lanpush-logs", "");
         if (!savedLog.isEmpty()) {
             for (String msg : savedLog.split("\n")) {
-                restoredMessages.add(msg);
+                if (!msg.isEmpty())
+                    restoredMessages.add(msg);
             }
             messages.addAll(0, restoredMessages);
             d("Restored " + restoredMessages.size() + " log messages.");

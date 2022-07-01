@@ -89,8 +89,6 @@ public class LanpushApp extends Application {
                 Log.saveMessages();
                 lastConnectionCheck = System.currentTimeMillis();
             }
-//            Log.i("Shutting down...");
-//            shutdown();
         }
     }
 

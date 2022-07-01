@@ -12,6 +12,4 @@ public class SleepPreference extends BooleanPreference {
                 Boolean.parseBoolean(LanpushApp.get(R.string.settings_sleep_default)));
     }
 
-    @Override
-    public void apply(Boolean value) {}
 }

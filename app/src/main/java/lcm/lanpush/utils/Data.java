@@ -50,7 +50,7 @@ public class Data {
                 else
                     retorno.append(milisegundos/Data.MINUTO).append("m").append(formataTempo(milisegundos % Data.MINUTO));
             }
-            // else retorno.append(milisegundos/Data.SEGUNDO).append("s").append(formataTempo(milisegundos % Data.SEGUNDO));
+             else retorno.append(milisegundos/Data.SEGUNDO).append("s").append(formataTempo(milisegundos % Data.SEGUNDO));
         }
         else {
             //retorno.append(milisegundos).append("ms");

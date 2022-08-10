@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">LANPUSH</string>
     <string name="first_fragment_label">LANPUSH</string>
-    <string name="first_message">Received messages will be displayed here.\nYou can send texts by clicking the button on the bottom.\nYou can also send messages directly from outside the app by selecting text or by sharing web links and selecting "LANPUSH"</string>
+    <string name="first_message">Received messages will be displayed here.\nYou can send texts by clicking the button on the bottom.\nYou can also send messages directly from outside the app by selecting text or by sharing web links and selecting "LANPUSH".\nOn the superior menu on the right, you can close the application properly and also change settings.\nYou may have to change at least the IP settings according to your private network.\n</string>
     <string name="action_settings">Settings</string>
     <!--<string name="action_reconnection">Force reconnection</string>-->
     <string name="action_about">Help and about</string>

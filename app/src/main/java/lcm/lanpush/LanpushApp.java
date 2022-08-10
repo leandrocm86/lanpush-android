@@ -17,7 +17,7 @@ import lcm.lanpush.alarms.CheckAlarm;
 import lcm.lanpush.alarms.PeriodicCheckAlarm;
 import lcm.lanpush.preferences.EnableDebugPreference;
 import lcm.lanpush.preferences.PortPreference;
-import lcm.lanpush.utils.Data;
+import lcm.lanpush.utils.Dates;
 import lcm.lanpush.workers.LanpushWorker;
 import lcm.lanpush.workers.ListenningWorker;
 import lcm.lanpush.workers.PeriodicWorker;
@@ -84,8 +84,8 @@ public class LanpushApp extends Application {
             if (System.currentTimeMillis() - lastConnectionCheck > 60000) {
                 ActivityManager.MemoryInfo memoryInfo = getMemoryInfo();
                 Log.d("LowMemory: " + memoryInfo.lowMemory + ", used " + (Math.round(100-memoryInfo.availMem*100/memoryInfo.totalMem)) + "%");
-                if (!Data.isSleepTime())
-                    CheckAlarm.inst.setAlarm(System.currentTimeMillis() + 60000);
+                if (!Dates.isSleepTime())
+                    CheckAlarm.inst.setAlarm(60000);
                 Log.saveMessages();
                 lastConnectionCheck = System.currentTimeMillis();
             }

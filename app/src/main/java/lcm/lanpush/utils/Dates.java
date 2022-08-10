@@ -4,10 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Data {
+public class Dates {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMdd HH:mm:ss");
 
-    public static String agora() {
+    private Dates() {}
+
+    public static String now() {
         return dateFormat.format(new Date());
 //        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
     }
@@ -25,35 +27,35 @@ public class Data {
     }
 
     public static boolean isSleepTime() {
-        int hora = getHora();
+        int hora = getHour();
         return hora >= 0 && hora < 6;
     }
 
-    public static int getHora() {
+    public static int getHour() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         return cal.get(Calendar.HOUR_OF_DAY);
     }
 
-    public static String formataTempo(long milisegundos) {
-        if (milisegundos <= 0)
+    public static String formatTime(long millis) {
+        if (millis <= 0)
             return new String();
         StringBuilder retorno = new StringBuilder();
-        if (milisegundos >= Data.SEGUNDO) {
-            if (milisegundos >= Data.MINUTO) {
-                if (milisegundos >= Data.HORA) {
-                    if (milisegundos >= Data.DIA)
-                        retorno.append(milisegundos/Data.DIA).append("d").append(formataTempo(milisegundos % Data.DIA));
+        if (millis >= Dates.SEGUNDO) {
+            if (millis >= Dates.MINUTO) {
+                if (millis >= Dates.HORA) {
+                    if (millis >= Dates.DIA)
+                        retorno.append(millis/ Dates.DIA).append("d").append(formatTime(millis % Dates.DIA));
                     else
-                        retorno.append(milisegundos/Data.HORA).append("h").append(formataTempo(milisegundos % Data.HORA));
+                        retorno.append(millis/ Dates.HORA).append("h").append(formatTime(millis % Dates.HORA));
                 }
                 else
-                    retorno.append(milisegundos/Data.MINUTO).append("m").append(formataTempo(milisegundos % Data.MINUTO));
+                    retorno.append(millis/ Dates.MINUTO).append("m").append(formatTime(millis % Dates.MINUTO));
             }
-             else retorno.append(milisegundos/Data.SEGUNDO).append("s").append(formataTempo(milisegundos % Data.SEGUNDO));
+             else retorno.append(millis/ Dates.SEGUNDO).append("s").append(formatTime(millis % Dates.SEGUNDO));
         }
         else {
-            //retorno.append(milisegundos).append("ms");
+            //retorno.append(millis).append("ms");
         }
         return retorno.toString();
     }

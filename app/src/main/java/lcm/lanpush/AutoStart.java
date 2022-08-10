@@ -15,7 +15,7 @@ public class AutoStart extends BroadcastReceiver {
             LanpushApp.close(true);
             return;
         }
-        Log.d("AUTO START");
+        Log.i("Application Auto Started");
     }
 
 }

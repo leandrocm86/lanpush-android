@@ -9,7 +9,7 @@ import android.os.Build;
 import lcm.lanpush.LanpushApp;
 import lcm.lanpush.Log;
 import lcm.lanpush.Receiver;
-import lcm.lanpush.utils.Data;
+import lcm.lanpush.utils.Dates;
 
 public class CheckAlarm extends Alarm {
 
@@ -22,7 +22,7 @@ public class CheckAlarm extends Alarm {
         if (Receiver.inst.isRunning())
             Log.d("Connection seems OK");
         else {
-            Log.d("Connection stopped. Restarting...");
+            Log.i("Waking check found connection was stopped. Restarting...");
             LanpushApp.restartWorker();
         }
 //        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -37,8 +37,8 @@ public class CheckAlarm extends Alarm {
     public void setAlarm(long triggerAtMillis) {
         AlarmManager alarmMgr = super.getAlarmManager();
         if (Build.VERSION.SDK_INT < 31 || alarmMgr.canScheduleExactAlarms()) {
-            Log.d("Configuring preventive wake up in " + Data.formataTempo(triggerAtMillis - System.currentTimeMillis()));
-            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, getPendingIntent());
+            Log.d("Configuring preventive wake up in about " + Dates.formatTime(triggerAtMillis));
+            alarmMgr.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + triggerAtMillis, getPendingIntent());
         } else {
             Log.d("There's no permission to set alarms. The application may be killed and don't restart.");
         }

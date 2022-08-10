@@ -22,6 +22,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import lcm.lanpush.alarms.GoodMorningAlarm;
 import lcm.lanpush.databinding.ActivityMainBinding;
 import lcm.lanpush.notification.Notificador;
 
@@ -143,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (id == R.id.action_close) {
             LanpushApp.close(false);
+            GoodMorningAlarm.inst.cancel();
             finishAffinity();
             finishAndRemoveTask();
         }

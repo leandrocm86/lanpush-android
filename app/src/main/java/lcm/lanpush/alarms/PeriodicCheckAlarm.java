@@ -9,8 +9,6 @@ import android.os.SystemClock;
 import lcm.lanpush.LanpushApp;
 import lcm.lanpush.Log;
 import lcm.lanpush.Receiver;
-import lcm.lanpush.preferences.SleepPreference;
-import lcm.lanpush.utils.Data;
 
 public class PeriodicCheckAlarm extends Alarm {
 
@@ -18,15 +16,12 @@ public class PeriodicCheckAlarm extends Alarm {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (SleepPreference.inst.getValue() && Data.isSleepTime()) {
-            Log.d("Periodic Alarm is resting.");
-            return;
-        }
         boolean running = Receiver.inst.isRunning();
         String diagnostic = running ? "Connection seems OK" : "Connection stopped. Restarting...";
         Log.d("Periodic Alarm being triggered... " + diagnostic);
-        if (!running)
+        if (!running) {
             LanpushApp.restartWorker();
+        }
 //        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 //        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "lanpush:alarm");
 //        wl.acquire();

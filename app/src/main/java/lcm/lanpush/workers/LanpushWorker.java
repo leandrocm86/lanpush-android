@@ -16,8 +16,9 @@ import lcm.lanpush.Log;
 import lcm.lanpush.Receiver;
 import lcm.lanpush.Sender;
 import lcm.lanpush.alarms.CheckAlarm;
+import lcm.lanpush.alarms.GoodMorningAlarm;
 import lcm.lanpush.preferences.SleepPreference;
-import lcm.lanpush.utils.Data;
+import lcm.lanpush.utils.Dates;
 
 public class LanpushWorker extends Worker {
     private final Context context;
@@ -35,10 +36,10 @@ public class LanpushWorker extends Worker {
                 Looper.prepare();
             }
 
-            if (SleepPreference.inst.getValue() && Data.isSleepTime()) {
+            if (SleepPreference.inst.getValue() && Dates.isSleepTime()) {
                 Log.i("Time to sleep. Application will be shutdown and scheduled to wake by the morning.");
+                GoodMorningAlarm.inst.setAlarm();
                 LanpushApp.close(false);
-                CheckAlarm.inst.setAlarm(Data.timestampNextMorning());
             }
             else {
                 if (!Receiver.inst.isRunning()) {
@@ -48,7 +49,7 @@ public class LanpushWorker extends Worker {
                     Sender.inst().send("[reconnect]");
                     Thread.sleep(1000);
                     if (!Receiver.inst.isRunning()) {
-                        Log.d("Receiver seems to have stopped. Restarting it...");
+                        Log.i("Receiver seems to have stopped. Restarting it...");
                         listen();
                     } else if (timeoutIsLate()) {
                         // Sometimes timeout expires but the Receiver is still listening.

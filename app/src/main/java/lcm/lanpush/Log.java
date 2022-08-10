@@ -1,18 +1,15 @@
 package lcm.lanpush;
 
 import android.content.SharedPreferences;
-import android.os.health.SystemHealthManager;
 
 import androidx.preference.PreferenceManager;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import lcm.lanpush.preferences.DebugHostPreference;
-import lcm.lanpush.preferences.DebugPortPreference;
 import lcm.lanpush.preferences.EnableDebugPreference;
 import lcm.lanpush.preferences.LogLimitPreference;
-import lcm.lanpush.utils.Data;
+import lcm.lanpush.utils.Dates;
 
 public class Log {
 //    private static int id = 0;
@@ -48,7 +45,7 @@ public class Log {
     }*/
 
     public static void log(String msg, String header) {
-        String linha = Data.agora() + ": " + header + msg;
+        String linha = Dates.now() + ": " + header + msg;
         if (EnableDebugPreference.inst.getValue())
             sendDebug(linha);
         addMsg(linha);
@@ -96,18 +93,10 @@ public class Log {
     public static void saveMessages() {
         if (!messages.isEmpty()) {
             d("Saving logs...");
-            if (messages.size() > messageLimit) {
-                while (messages.size() > messageLimit)
-                    messages.removeFirst();
-            }
+            while (messages.size() > messageLimit)
+                messages.removeFirst();
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LanpushApp.getContext()).edit();
-            StringBuilder log = new StringBuilder();
-            for (String msg : messages) {
-                if (log.length() > 0)
-                    log.append("\n");
-                log.append(msg);
-            }
-            editor.putString("lanpush-logs", log.toString());
+            editor.putString("lanpush-logs", String.join("\n", messages));
     //        editor.apply();
             editor.commit();
         }

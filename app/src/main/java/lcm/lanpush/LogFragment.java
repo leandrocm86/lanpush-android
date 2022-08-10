@@ -29,7 +29,7 @@ public class LogFragment extends Fragment {
         Log.d("Creating log view...");
         super.onViewCreated(view, savedInstanceState);
         LanpushApp.saveLogView(this);
-//        this.fillMessages();
+        //this.fillMessages();
     }
 
     @Override
@@ -43,22 +43,21 @@ public class LogFragment extends Fragment {
         LanpushApp.getMainActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//                if (binding.logview.getText().length() == 0) {
-//                    fillMessages();
-//                }
-                binding.logview.setText(binding.logview.getText() + msg + "\n");
-                scrollDown();
+                if (binding != null && binding.logview != null) {
+                    binding.logview.setText(binding.logview.getText() + msg + "\n");
+                    scrollDown();
+                }
             }
         });
     }
 
     public void fillMessages() {
-        Log.d("Loading messages...");
+        Log.d("Loading messages... First message is: ");
         String output = "";
         for (String msg : Log.getMessages())
             output += msg + "\n";
         if (output.length() > 0)
-            binding.logview.setText(output);
+            binding.logview.setText(LanpushApp.get(R.string.first_message) + output);
         scrollDown();
     }
 

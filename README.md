@@ -6,7 +6,7 @@ LANPUSH is a utility to exchange text messages between devices in the same local
 <u>No internet required! No login!</u> Just send a message and all configured devices in the same LAN will be notified with it.
 
 **LANPUSH is available for PCs with Java (Windows/Linux/Mac) and phones with Android.**<br>
-For the PC client, check the project on [https://github.com/leandrocm86/lanpush-android](https://github.com/leandrocm86/lanpush)<br>
+For the PC client, check the project on [https://github.com/leandrocm86/lanpush](https://github.com/leandrocm86/lanpush)<br>
 Both projects are free, open sourced, have no ads, and are open to suggestions.
 
 #### Use cases:
@@ -18,7 +18,7 @@ Once a message is sent, all PCs and Android phones on the same wifi will be able
 - Server automation:
 With LANPUSH your server can easily send you warnings even when no internet is available.
 You can also go the other way around, sending commands for the server to read and start your tasks.
-Tired of going through SSH everytime just to start trivial jobs? Make your server act upon the messages it receives. You can configure lanpush to log messages on a predefined file, and also choose IPs and ports to listen to.
+Tired of going through SSH every time just to start trivial jobs? Make your server act upon the messages it receives. You can configure lanpush to log messages on a predefined file, and also choose IPs and ports to listen to.
 
 #### Usage:
 After installing and opening the app, a simple window will display received messages and relevant log info.
@@ -30,6 +30,7 @@ You can also change the UDP port it uses. By default, the app will read any mess
 It's not necessary to keep the app on the foreground. Whenever a new message is received, a notification will be created.
 When a notification arrives, there's an action link to copy it. If you click the notification itself, the browser will open and will google the message content, unless it was already a web link, in which case the browser will open it directly.
 
-IMPORTANT NOTES:
+KNOWN PROBLEMS AND IMPORTANT NOTES:
 - Although the app consumes little power, Android often tries to kill it on the background. Because of this, the app has defense mecanisms to wake up on its own and might never stop unless you exit it properly. If you want it to stop, click the menu option *Disconnect and close*.
+- To prevent missing messages due to Android killing the app too frequently, it's advisable to add LANPUSH to your device's optimization whitelist.
 - Android devices might not receive messages coming from broadcasts. When that's the case, you may have to add each Android device IP on the IP settings from the sender devices.
